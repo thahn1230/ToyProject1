@@ -18,7 +18,7 @@ const ChatBox = ({
   }, [messages]);
 
   const PostMessage = (message: string) => {
-    fetch("http://localhost:8001/test", {
+    fetch("http://localhost:8001/test/query", {
       method: "POST",
       headers: {
         Authorization: `Bearer`,
