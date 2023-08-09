@@ -50,20 +50,18 @@ def generate_response(params:dict):
 
 # for testing. ignore it
 @router.get("/test/query/asd")
-def test_response(params:dict):
-    #openai.api_key = "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"
-  
-
+def test_response():
+    print("hi")
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
             {
             "role": "user",
-            "content": "User message goes here."
+            "content": "tell me about computer"
             }
         ],
         temperature=0.2
     )
 
     print(response.choices[0].message['content'])  # Print the generated response
-    return response
+    return response.choices[0].message['content']
