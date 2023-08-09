@@ -1,18 +1,13 @@
 from fastapi import FastAPI
 from mangum import Mangum
 from endpoints import router
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
-
-# Import and use the CORSMiddleware from fastapi.middleware
-from fastapi.middleware.cors import CORSMiddleware
 
 # Configure CORS settings
 origins = [
     '*',
-    # "http://localhost",
-    # "http://localhost:3000",  # Example frontend development server
-    # "https://yourdomain.com"  # Add your production domain here
 ]
 
 app.add_middleware(
