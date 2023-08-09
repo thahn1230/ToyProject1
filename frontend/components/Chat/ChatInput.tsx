@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { ChatInputWrapper } from "./Chat.styles";
 import { Message } from "@/types/message.type";
 
