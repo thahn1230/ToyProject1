@@ -13,7 +13,7 @@ const ChatInput = ({
 
   const handleSendMessage = () => {
     if (newMessage.trim() !== "") {
-      setMessages([...messages, { isUser: true, content: newMessage }]);
+      setMessages([{ isUser: true, content: newMessage }, ...messages]);
       setNewMessage("");
     }
   };
@@ -31,8 +31,19 @@ const ChatInput = ({
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
         onKeyUp={handleKeyDown} // 엔터 키 이벤트 핸들링
+        style={{
+          width: "80%",
+          height: "100%",
+          border: "none",
+          outline: "none",
+        }}
       ></input>
-      <button onClick={handleSendMessage}>전송</button>
+      <button
+        onClick={handleSendMessage}
+        style={{ width: "15%", height: "80%" }}
+      >
+        전송
+      </button>
     </ChatInputWrapper>
   );
 };

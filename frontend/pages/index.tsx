@@ -5,7 +5,7 @@ import {
   HomeHeader,
   MapContainer,
 } from "../components/home/home.styles";
-import ChatContainer from "@/components/ChatBox/ChatContainer";
+import ChatContainer from "@/components/Chat/ChatContainer";
 import { RestaurantType } from "@/types/restaurant.type";
 
 export default function Home() {
