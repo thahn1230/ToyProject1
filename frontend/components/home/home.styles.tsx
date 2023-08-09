@@ -23,8 +23,3 @@ export const MapContainer = styled.div`
   background-color: #f0f0f0;
   border: 1px solid red;
 `;
-export const ChatContainer = styled.div`
-  width: 20%;
-  height: 100%;
-  border: 1px solid blue;
-`;

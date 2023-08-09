@@ -16,11 +16,7 @@ def read_root():
 
 @router.get("/test")
 def test(params: dict):
-    
-    return {"query": "query here",
-    "answer" : "answer here",
-     "method" : "post"
-    }
+    return {"query": "query here", "answer": "answer here", "method": "post"}
 
 
 @router.post("/test")
