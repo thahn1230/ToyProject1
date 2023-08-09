@@ -46,7 +46,7 @@ def generate_response(params:dict):
         )
 
     print(response.choices[0].message['content'])  # Print the generated response
-    return response.choices[0].message['content']
+    return {'answer':response.choices[0].message['content']}
 
 # for testing. ignore it
 @router.get("/test/query/asd")
