@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 import { ChatInputWrapper } from "./Chat.styles";
 import { Message } from "@/types/message.type";
 
@@ -18,7 +18,7 @@ const ChatInput = ({
     }
   };
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
       handleSendMessage();
