@@ -28,24 +28,3 @@ export const ChatContainer = styled.div`
   height: 100%;
   border: 1px solid blue;
 `;
-
-export const ChatHeader = styled.div`
-  width: 100%;
-  height: 10%;
-  border: 1px solid black;
-`;
-export const ChatBody = styled.div`
-  width: 100%;
-  height: 90%;
-  border: 1px solid black;
-`;
-
-export const ChatMessages = styled.div`
-  width: 100%;
-  height: 60%;
-`;
-
-export const ChatInput = styled.input`
-  width: 100%;
-  height: 10%;
-`;

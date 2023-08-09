@@ -1,53 +1,15 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
 import {
-  ChatBody,
-  ChatContainer,
-  ChatHeader,
-  ChatInput,
-  ChatMessages,
   HomeBody,
   HomeHeader,
   MapContainer,
 } from "../components/home/home.styles";
-
-// const inter = Inter({ subsets: ["latin"] });
+import ChatContainer from "@/components/ChatBox/ChatContainer";
+import { RestaurantType } from "@/types/restaurant.type";
 
 export default function Home() {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    fetch("http://10.221.71.35:8000/", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((response) => {
-        console.log(response);
-        setData(JSON.parse(response));
-      })
-      .catch((error) => console.error("Error:", error));
-  });
-  const [messages, setMessages] = useState<Array<string>>([]);
-  const [newMessage, setNewMessage] = useState<string>("");
-
-  const handleSendMessage = () => {
-    if (newMessage.trim() !== "") {
-      setMessages([...messages, newMessage]);
-      setNewMessage("");
-    }
-  };
+  const [data, setData] = useState<Array<RestaurantType>>([]);
 
   return (
     <>
@@ -61,24 +23,7 @@ export default function Home() {
       <HomeHeader>Header</HomeHeader>
       <HomeBody>
         <MapContainer>MAP</MapContainer>
-        <ChatContainer>
-          <ChatHeader>ChatHeader</ChatHeader>
-          <ChatBody>
-            <ChatMessages>
-              {" "}
-              {messages.map((message, index) => (
-                <div key={index} className="message">
-                  {message}
-                </div>
-              ))}
-            </ChatMessages>
-            <ChatInput
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-            />
-            <button onClick={handleSendMessage}>전송</button>
-          </ChatBody>
-        </ChatContainer>
+        <ChatContainer setData={setData} />
       </HomeBody>
     </>
   );
