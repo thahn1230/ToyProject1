@@ -18,7 +18,7 @@ const ChatInput = ({
     }
   };
 
-  const handleKeyDown = (event) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
       handleSendMessage();

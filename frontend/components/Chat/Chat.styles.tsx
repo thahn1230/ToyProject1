@@ -33,12 +33,13 @@ export const ChatMessages = styled.div`
 `;
 
 export const ChatMessage = styled.div`
-  width: 300px;
-  height: 30px;
+  width: 90%;
+  height: auto;
   display: flex;
   border: 1px solid black;
   margin: 2px;
   flex-shrink: 0;
+  word-break: break-all;
 `;
 
 export const ChatInputWrapper = styled.div`
