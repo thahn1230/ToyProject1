@@ -52,6 +52,7 @@ def generate_response(params:dict):
     print(response.choices[0].message['content'])  # Print the generated response
     return response.choices[0].message['content']
 
+# for testing. ignore it
 @router.get("/test/query/asd")
 def test_response(params:dict):
     #openai.api_key = "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"
