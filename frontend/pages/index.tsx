@@ -1,21 +1,15 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "next/font/google";
-import styles from "@/styles/Home.module.css";
 import {
-  ChatContainer,
   HomeBody,
   HomeHeader,
   MapContainer,
 } from "../components/home/home.styles";
-import ChatBox from "@/components/ChatBox/Chat";
-import { ChatBody, ChatHeader } from "@/components/ChatBox/Chat.styles";
-
-// const inter = Inter({ subsets: ["latin"] });
+import ChatContainer from "@/components/ChatBox/ChatContainer";
+import { RestaurantType } from "@/types/restaurant.type";
 
 export default function Home() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Array<RestaurantType>>([]);
 
   return (
     <>
@@ -29,12 +23,7 @@ export default function Home() {
       <HomeHeader>Header</HomeHeader>
       <HomeBody>
         <MapContainer>MAP</MapContainer>
-        <ChatContainer>
-          <ChatHeader>ChatHeader</ChatHeader>
-          <ChatBody>
-            <ChatBox setData={setData}></ChatBox>
-          </ChatBody>
-        </ChatContainer>
+        <ChatContainer setData={setData} />
       </HomeBody>
     </>
   );

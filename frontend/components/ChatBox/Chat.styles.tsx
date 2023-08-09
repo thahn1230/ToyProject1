@@ -1,5 +1,11 @@
 import styled from "@emotion/styled";
 
+export const ChatContainerWrapper = styled.div`
+  width: 20%;
+  height: 100%;
+  border: 1px solid blue;
+`;
+
 export const ChatHeader = styled.div`
   width: 100%;
   height: 10%;
