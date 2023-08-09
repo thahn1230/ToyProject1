@@ -1,9 +1,14 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Message } from "@/types/message.type";
 import { ChatMessage, ChatMessages } from "./Chat.styles";
 import ChatInput from "./ChatInput";
+import { RestaurantType } from "@/types/restaurant.type";
 
-const ChatBox = ({ setData }) => {
+const ChatBox = ({
+  setData,
+}: {
+  setData: Dispatch<SetStateAction<RestaurantType[]>>;
+}) => {
   const [messages, setMessages] = useState<Array<Message>>([]);
 
   useEffect(() => {
@@ -13,37 +18,37 @@ const ChatBox = ({ setData }) => {
   }, [messages]);
 
   const PostMessage = (message: string) => {
-    // fetch("http://localhost:8001/test", {
-    //   method: "POST",
-    //   headers: {
-    //     Authorization: `Bearer`,
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     message: message,
-    //   }),
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw new Error("Network response was not ok");
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((response) => {
-    //     setMessages([{ isUser: false, content: response.answer }, ...messages]);
-    //     setData([
-    //       {
-    //         name: "test",
-    //         coordinate: { latitude: 0, longitude: 0 },
-    //         content: null,
-    //       },
-    //     ]);
-    //     // setData(JSON.parse());
-    //   })
-    //   .catch((error) => console.error("Error:", error));
+    fetch("http://localhost:8001/test", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        message: message,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((response) => {
+        setMessages([{ isUser: false, content: response.answer }, ...messages]);
+        setData([
+          {
+            name: "test",
+            coordinate: { latitude: 0, longitude: 0 },
+            content: null,
+          },
+        ]);
+        // setData(JSON.parse());
+      })
+      .catch((error) => console.error("Error:", error));
 
-    setData([{ name: "test", coordinate: { latitude: 0, longitude: 0 } }]);
-    setMessages([{ isUser: false, content: "test" }, ...messages]);
+    // setData([{ name: "test", coordinate: { latitude: 0, longitude: 0 } }]);
+    // setMessages([{ isUser: false, content: "test" }, ...messages]);
   };
 
   return (
