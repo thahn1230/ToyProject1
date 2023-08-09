@@ -4,10 +4,10 @@ from fastapi.responses import JSONResponse
 import openai
 import os
 import requests
-
+from queryConfig import GPT_API_KEY
 router = APIRouter()
 
-openai.api_key = "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"
+openai.api_key = GPT_API_KEY
 
 @router.get("/")
 def read_root():
@@ -31,12 +31,12 @@ def test(params: dict):
 @router.post("/test/query")
 def generate_response(params:dict):
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-16k-0613",
+        model="gpt-3.5-turbo",
         messages=[
-        #     {
-        #     "role" : "system",
-        #     "content" : prompt
-        # },
+        {
+            "role": "system",
+            "content": "you have to answer everything in korean"
+        },
         {
             "role" : "user",
             "content" : params['message']
@@ -56,8 +56,12 @@ def test_response():
         model="gpt-3.5-turbo",
         messages=[
             {
+            "role": "system",
+            "content": "you have to answer everything in korean"
+            },
+            {
             "role": "user",
-            "content": "tell me about computer"
+            "content": "tell me about keyboard"
             }
         ],
         temperature=0.2
