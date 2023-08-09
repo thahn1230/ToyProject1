@@ -8,9 +8,20 @@ def read_root():
     return {"message": "Hello World!"}
 
 
-@router.post("/test")
+@router.get("/test")
 def test(params: dict):
     
     return {"query": "query here",
-    "answer" : "answer here"
+    "answer" : "answer here",
+     "method" : "post"
+    }
+
+
+@router.post("/test")
+def test(params: dict):
+    print(params)
+
+    return {"query": "query here",
+    "answer" : "answer here",
+    "method" : "post"
     }
