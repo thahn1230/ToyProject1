@@ -6,7 +6,12 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.keys import Keys
 import time
 from selenium.common.exceptions import TimeoutException
-from geopy.geocoders import Nominatim
+import requests
+import urllib.request
+import json
+
+# for geocoding
+endpoint = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode"
 
 # Initialize the Chrome WebDriver
 driver = webdriver.Chrome()
@@ -43,6 +48,7 @@ name_before = ""
 # nextPage.click()
 # nextPage.click()
 # time.sleep(1)
+
 while(True):
     restaurants_in_page = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'TYaxT')))
     time.sleep(1)
@@ -77,13 +83,22 @@ while(True):
         open_status = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'time'))).text
         contact = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'xlx7Q'))).text
 
+        q=urllib.parse.quote_plus(location)
+        url = f"https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query={q}"
+        request = urllib.request.Request(url)
+        request.add_header("X-NCP-APIGW-API-KEY-ID", "c475psvaa6")
+        request.add_header("X-NCP-APIGW-API-KEY", "bSHA0bDTsrc8yNN1egy89UioehVLQptayQynVpWH")
+        res = json.loads(urllib.request.urlopen(request).read().decode("utf-8"))['addresses'][0]
+
         name_before = name
-        print(name)
-        print(category)
-        print(location)
-        print(open_status)
-        print(contact)
-        print('\n')
+        print("{")
+        print("name : " + name)
+        print("category : " +category)
+        print("location : " +location)
+        print("last_order : " +open_status)
+        print("contact : " +contact)
+        print("coordinate : {" + "lon : " + res['x'] + ', ' + "lat : " + res['y'] + "}")
+        print("}, ")
 
 
         driver.switch_to.default_content()
