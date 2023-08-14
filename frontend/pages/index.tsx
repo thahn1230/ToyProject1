@@ -24,6 +24,7 @@ export default function Home() {
   useMap();
   const [data, setData] = useState<Array<RestaurantType>>([]);
 
+  useEffect(()=>{console.log(data)}, [data])
   return (
     <>
       <Head>

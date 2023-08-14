@@ -18,7 +18,7 @@ const ChatBox = ({
   }, [messages]);
 
   const PostMessage = (message: string) => {
-    fetch("http://localhost:8001/test/query", {
+    fetch("http://localhost:8000/test/query", {
       method: "POST",
       headers: {
         Authorization: `Bearer`,
@@ -35,14 +35,11 @@ const ChatBox = ({
         return response.json();
       })
       .then((response) => {
-        setMessages([{ isUser: false, content: response.answer }, ...messages]);
-        setData([
-          {
-            name: "test",
-            coordinate: { latitude: 0, longitude: 0 },
-            content: null,
-          },
-        ]);
+        console.log(JSON.parse(response.answer).restaurants)
+        setMessages([{ isUser: false, content: JSON.parse(response.answer).message }, ...messages]);
+
+
+        setData(JSON.parse(response.answer).restaurants);
         // setData(JSON.parse());
       })
       .catch((error) => console.error("Error:", error));

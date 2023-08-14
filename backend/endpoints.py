@@ -80,7 +80,7 @@ def test_response():
         messages=[
             {
                 "role": "system",
-                "content": "You have to answer in the following format : {message : string, restaurants:[]}." +
+                "content": "You have to answer in the following format : {message : string, restaurants: {name: string;category: string;coordinate: { latitude: number; longitude: number };location: string;last_order: string;contact: string;}[]}." +
                 "And content of message must be korean." +
                 "In the restaurants array, there should be objects in list below." +
                 "In the restaurants array, ther should be additional information, which is the coordinate of the restaurant. You have to convert location into coordinate"
