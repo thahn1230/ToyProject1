@@ -48,57 +48,36 @@ function useMap(data: any) {
 
   useEffect(() => {
     for (var restaurant of data) {
+      (function(restaurant) { // IIFE (즉시 호출되는 함수 표현식) 사용
+        var marker = new naver.maps.Marker({
+          position: new naver.maps.LatLng(restaurant.coordinate.latitude, restaurant.coordinate.longitude),
+          map: mapRef.current,
+        });
 
-      //제일 간단한 marker
-      var marker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(restaurant.coordinate.latitude,restaurant.coordinate.longitude),
-        map: mapRef.current
-      });
-      
-      //marker 지우기
-      // marker.setMap(null)
-
-      // var newMarker = new naver.maps.Marker({
-      //   position: new naver.maps.LatLng(
-      //     restaurant.coordinate.latitude,
-      //     restaurant.coordinate.longitude
-      //   ),
-      //   map: mapRef.current,
-      //   title: restaurant.name,
-      //   icon: {
-      //     content: [
-      //       
-      //     ].join(""),
-      //     size: new naver.maps.Size(38, 58),
-      //     anchor: new naver.maps.Point(19, 58),
-      //   },
-      //   draggable: true,
-      // });
-
-      var contentString = [
-        '<div class="iw_inner">',
-            '   <h3>{restaurant.name}</h3>',
-            // '   <p>{res.contact}<br>',
-            // '       <img src="./img/hi-seoul.jpg" width="55" height="55" alt="서울시청" class="thumb" /><br>',
-            // '       02-120 | 공공,사회기관 > 특별,광역시청<br>',
-            // '       <a href="http://www.seoul.go.kr" target="_blank">www.seoul.go.kr/</a>',
-            // '   </p>',
-            '</div>'
+        var contentString = [
+          '<div class="iw_inner">',
+          '   <h3>' + restaurant.name + '</h3>',
+          '   <h3>' + restaurant.category + '</h3>',
+          '   <h3>' + restaurant.last_order + '</h3>',
+          '   <h3>' + restaurant.contact + '</h3>',
+          '</div>',
         ].join('');
 
         var infowindow = new naver.maps.InfoWindow({
-            content: contentString
+          content: contentString,
         });
 
-        naver.maps.Event.addListener(marker, "click", function(e) {
+        naver.maps.Event.addListener(marker, "click", function (e) {
           if (infowindow.getMap()) {
-              infowindow.close();
+            infowindow.close();
           } else {
-              infowindow.open(mapRef.current, marker);
+            infowindow.open(mapRef.current, marker);
           }
-      });
+        });
+      })(restaurant); // IIFE에 현재 반복의 restaurant를 전달
     }
   }, [data]);
+
 
 
 
