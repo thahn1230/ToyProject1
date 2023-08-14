@@ -9,6 +9,7 @@ from selenium.common.exceptions import TimeoutException
 import requests
 import urllib.request
 import json
+from queryConfig import test_data
 
 # for geocoding
 endpoint = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode"
@@ -43,12 +44,15 @@ nextPage = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((
 # Pages and restaurants iteration
 MAX_RETRIES = 5
 name_before = ""
-# nextPage.click()
-# nextPage.click()
-# nextPage.click()
-# nextPage.click()
-# time.sleep(1)
 
+# For fast crawling, only for testing
+nextPage.click()
+nextPage.click()
+nextPage.click()
+nextPage.click()
+time.sleep(1)
+
+new_test_data = ""
 while(True):
     restaurants_in_page = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'TYaxT')))
     time.sleep(1)
@@ -91,14 +95,28 @@ while(True):
         res = json.loads(urllib.request.urlopen(request).read().decode("utf-8"))['addresses'][0]
 
         name_before = name
-        print("{")
-        print("name : " + name)
-        print("category : " +category)
-        print("location : " +location)
-        print("last_order : " +open_status)
-        print("contact : " +contact)
-        print("coordinate : {" + "lon : " + res['x'] + ', ' + "lat : " + res['y'] + "}")
-        print("}, ")
+
+        new_restaurant = "{\n"
+        new_restaurant += ("name : " + name + '\n')
+        new_restaurant += ("category : " +category+ '\n')
+        new_restaurant += ("location : " +location+ '\n')
+        new_restaurant += ("last_order : " +open_status+ '\n')
+        new_restaurant += ("contact : " +contact+ '\n')
+        new_restaurant += ("coordinate : {" + "lon : " + res['x'] + ', ' + "lat : " + res['y'] + "}\n")
+        new_restaurant += "},\n"
+
+
+        new_test_data += new_restaurant
+        print(new_restaurant)
+        # print("{")
+        # print("name : " + name)
+        # print("category : " +category)
+        # print("location : " +location)
+        # print("last_order : " +open_status)
+        # print("contact : " +contact)
+        # print("coordinate : {" + "lon : " + res['x'] + ', ' + "lat : " + res['y'] + "}")
+        # print("}, ")
+
 
 
         driver.switch_to.default_content()
@@ -112,6 +130,17 @@ while(True):
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(nextPage)).click()
     # nextPage.click()
     time.sleep(1)
+
+
+with open("queryConfig.py","r", encoding="utf-8") as configFile:
+    lines=configFile.readlines()
+for i, line in enumerate(lines):
+    if "test_data" in line:
+        lines[i] = f"test_data = {repr(new_test_data)}\n"
+        break
+
+with open("queryConfig.py", "w", encoding="utf-8") as configFile:
+    configFile.writelines(lines)
 
 print("----finished----")
 # Close the driver
