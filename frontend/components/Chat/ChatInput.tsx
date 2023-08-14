@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { ChatInputWrapper } from "./Chat.styles";
 import { Message } from "@/types/message.type";
-// import Input from "@mui/joy/Input";
+import Input from "@mui/joy/Input";
 
 const ChatInput = ({
   messages,
@@ -30,24 +30,15 @@ const ChatInput = ({
   };
   return (
     <ChatInputWrapper>
-      <input
-        type="text"
+      <Input
+        color="neutral"
+        variant="outlined"
+        size="sm"
         value={newMessage}
         onChange={(e) => setNewMessage(e.target.value)}
         onKeyUp={handleKeyDown} // 엔터 키 이벤트 핸들링
-        style={{
-          width: "80%",
-          height: "100%",
-          border: "none",
-          outline: "none",
-        }}
-      ></input>
-      <button
-        onClick={handleSendMessage}
-        style={{ width: "15%", height: "80%" }}
-      >
-        전송
-      </button>
+        style={{ width: "100%", height: "100%" }}
+      />
     </ChatInputWrapper>
   );
 };

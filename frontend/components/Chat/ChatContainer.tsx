@@ -12,7 +12,6 @@ const ChatContainer = ({
 }) => {
   return (
     <ChatContainerWrapper>
-      <ChatHeader>ChatHeader</ChatHeader>
       <ChatBody>
         <ChatBox data={data} setData={setData}></ChatBox>
       </ChatBody>
