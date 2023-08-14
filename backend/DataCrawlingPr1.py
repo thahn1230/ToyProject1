@@ -10,7 +10,7 @@ import requests
 import urllib.request
 
 ##### for geocoding
-endpoint = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode"
+endpoint = "http://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode"
 q=urllib.parse.quote_plus("서울특별시 강남구 강남대로 310")
 url = f"{endpoint}?query={q}"
 # headers_keys = {
