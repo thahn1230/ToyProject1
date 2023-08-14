@@ -42,19 +42,19 @@ def generate_response(params: dict):
                 "role": "system",
                 "content": "You have to answer in the following format : {message : string, restaurants: {name: string;category: string;coordinate: { latitude: number; longitude: number };location: string;last_order: string;contact: string;}[]}."
                 + "And content of message must be korean."
-                + "In the restaurants array, there should be objects in list below."
-                + "In the restaurants array, ther should be additional information, which is the coordinate of the restaurant. You have to convert location into coordinate",
+                + "List of resturants will be given. And in the restaurants[] you should choose objects among them. "
+                + "restaurants[] can be an empty array if there is no corresponding data. "
             },
             {"role": "system", "content": "List of data is as follows : " + test_data},
             {
                 "role": "system",
                 "content": "Time now is : "
                 + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                + " so your answer must include open restaurants.",
+                + " so your answer must include open restaurants only.",
             },
             {"role": "user", "content": params["message"]},
         ],
-        temperature=0.2,
+        temperature=0,
     )
 
     # Print the generated response
@@ -64,20 +64,19 @@ def generate_response(params: dict):
 
 
 # for testing. ignore it
-
-
 @router.get("/test/query/asd")
 def test_response():
     print("hi")
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4-0613",
         messages=[
             {
                 "role": "system",
                 "content": "You have to answer in the following format : {message : string, restaurants: {name: string;category: string;coordinate: { latitude: number; longitude: number };location: string;last_order: string;contact: string;}[]}."
                 + "And content of message must be korean."
                 + "In the restaurants array, there should be objects in list below."
-                + "In the restaurants array, ther should be additional information, which is the coordinate of the restaurant. You have to convert location into coordinate",
+                + "In the restaurants array, ther should be additional information, which is the coordinate of the restaurant. You have to convert location into coordinate. "
+                + "Your restaurants[] must be part of List of data below. restaurants[] can be an empty array. "
             },
             {"role": "system", "content": "List of data is as follows : " + test_data},
             {
