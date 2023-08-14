@@ -6,7 +6,25 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.keys import Keys
 import time
 from selenium.common.exceptions import TimeoutException
-from geopy.geocoders import Nominatim
+import requests
+import urllib.request
+
+##### for geocoding
+endpoint = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode"
+q=urllib.parse.quote_plus("서울특별시 강남구 강남대로 310")
+url = f"{endpoint}?query={q}"
+# headers_keys = {
+#     "X-NCP-APIGW-API-KEY-ID": "c475psvaa6",
+#     "X-NCP-APIGW-API-KEY": "bSHA0bDTsrc8yNN1egy89UioehVLQptayQynVpWH",
+# }
+request =urllib.request.Request(url)
+request.add_header("X-NCP-APIGW-API-KEY-ID","c475psvaa6")
+request.add_header("X-NCP-APIGW-API-KEY", "bSHA0bDTsrc8yNN1egy89UioehVLQptayQynVpWH")
+res = urllib.request.urlopen(request)
+print(res.read())
+
+
+
 
 # Initialize the Chrome WebDriver
 driver = webdriver.Chrome()
@@ -76,6 +94,7 @@ while(True):
         location = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'LDgIH'))).text
         open_status = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'time'))).text
         contact = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'xlx7Q'))).text
+        
 
         name_before = name
         print(name)
