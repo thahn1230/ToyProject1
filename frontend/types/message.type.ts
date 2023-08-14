@@ -1,4 +1,7 @@
+import { RestaurantType } from "./restaurant.type";
+
 export interface Message {
   isUser: boolean;
-  content: string;
+  message: string;
+  restaurants: Array<RestaurantType>;
 }

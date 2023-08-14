@@ -6,7 +6,7 @@ import styles from "@/styles/Home.module.css";
 import type { NextPage } from "next";
 import styled from "styled-components";
 import useMap from "./useMap";
-import useMarker from './useMarker';
+import useMarker from "./useMarker";
 import {
   HomeBody,
   HomeHeader,
@@ -24,8 +24,6 @@ export default function Home() {
   const [data, setData] = useState<Array<RestaurantType>>([]);
   useMap(data);
 
-  
-
   // useEffect(()=>{console.log(data)}, [data])
   return (
     <>
@@ -41,7 +39,7 @@ export default function Home() {
         <MapContainer>
           <MapBox id="map"></MapBox> {/* MapBox 컴포넌트 사용 */}
         </MapContainer>
-        <ChatContainer setData={setData} />
+        <ChatContainer data={data} setData={setData} />
       </HomeBody>
     </>
   );

@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { ChatInputWrapper } from "./Chat.styles";
 import { Message } from "@/types/message.type";
+// import Input from "@mui/joy/Input";
 
 const ChatInput = ({
   messages,
@@ -13,7 +14,10 @@ const ChatInput = ({
 
   const handleSendMessage = () => {
     if (newMessage.trim() !== "") {
-      setMessages([{ isUser: true, content: newMessage }, ...messages]);
+      setMessages([
+        { isUser: true, message: newMessage, restaurants: [] },
+        ...messages,
+      ]);
       setNewMessage("");
     }
   };

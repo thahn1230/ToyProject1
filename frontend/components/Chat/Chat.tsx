@@ -1,19 +1,22 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Message } from "@/types/message.type";
-import { ChatMessage, ChatMessages } from "./Chat.styles";
+import { ChatMessageWrapper, ChatMessages } from "./Chat.styles";
 import ChatInput from "./ChatInput";
 import { RestaurantType } from "@/types/restaurant.type";
+import ChatMessage from "./ChatMessage";
 
 const ChatBox = ({
+  data,
   setData,
 }: {
+  data: RestaurantType[];
   setData: Dispatch<SetStateAction<RestaurantType[]>>;
 }) => {
   const [messages, setMessages] = useState<Array<Message>>([]);
 
   useEffect(() => {
     if (messages.length > 0 && messages[0].isUser) {
-      PostMessage(messages[0].content);
+      PostMessage(messages[0].message);
     }
   }, [messages]);
 
@@ -37,7 +40,11 @@ const ChatBox = ({
       .then((response) => {
         console.log(JSON.parse(response.answer).restaurants);
         setMessages([
-          { isUser: false, content: (JSON.parse(response.answer).message + JSON.parse(response.answer).restaurants.map((item:any)=> item.name)) },
+          {
+            isUser: false,
+            message: JSON.parse(response.answer).message,
+            restaurants: JSON.parse(response.answer).restaurants,
+          },
           ...messages,
         ]);
 
@@ -54,17 +61,7 @@ const ChatBox = ({
     <>
       <ChatMessages>
         {messages.map((message, index) => {
-          return (
-            <ChatMessage
-              key={index}
-              className="message"
-              style={{
-                justifyContent: message.isUser ? "flex-end" : "flex-start",
-              }}
-            >
-              {message.content}
-            </ChatMessage>
-          );
+          return <ChatMessage key={index} message={message}></ChatMessage>;
         })}
       </ChatMessages>
       <ChatInput messages={messages} setMessages={setMessages} />
