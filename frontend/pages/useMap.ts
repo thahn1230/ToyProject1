@@ -46,21 +46,25 @@ function useMap(data: any) {
 //     last_order: string;
 //     contact: string;
 //   }
-
 useEffect(() => {
-  // 기존 마커 제거
-  for(var i in markers)
-  {
-    markers[i].setMap(null)
-  }
+  // 기존 마커와 인포윈도우 제거
+  markers.forEach((marker:any) => {
+    marker.setMap(null);
+    if (marker.infowindow) {
+      marker.infowindow.close();
+    }
+  });
+
+  const newMarkers = [];
+  
   // 새로운 마커 생성
   for (var restaurant of data) {
-    (function(restaurant) {
-      var marker = new naver.maps.Marker({
+    (function (restaurant) {
+      var marker:any = new naver.maps.Marker({
         position: new naver.maps.LatLng(restaurant.coordinate.latitude, restaurant.coordinate.longitude),
         map: mapRef.current,
       });
-      markers.push(marker)
+      newMarkers.push(marker);
 
       var contentString = [
         '<div class="iw_inner">',
@@ -82,8 +86,14 @@ useEffect(() => {
           infowindow.open(mapRef.current, marker);
         }
       });
+
+      marker.infowindow = infowindow; // 마커와 인포윈도우 연결
+
     })(restaurant);
   }
+
+  setMarkers(newMarkers); // 새로운 마커로 업데이트
+
 }, [data]);
 
 
