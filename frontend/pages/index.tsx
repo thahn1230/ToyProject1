@@ -1,16 +1,12 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
-<<<<<<< HEAD
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
-import type { NextPage } from 'next';
-import styled from 'styled-components';
-import useMap from './useMap';
+import type { NextPage } from "next";
+import styled from "styled-components";
+import useMap from "./useMap";
 
-
-=======
->>>>>>> c4478cd0858d41b3370a90bf4a4c9f6f8c9edea8
 import {
   HomeBody,
   HomeHeader,
@@ -24,45 +20,9 @@ const MapBox = styled.div`
   height: 800px;
 `;
 
-
 export default function Home() {
-<<<<<<< HEAD
-
   useMap();
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    fetch("http://10.221.71.35:8000/", {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer`,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((response) => {
-        console.log(response);
-        setData(JSON.parse(response));
-      })
-      .catch((error) => console.error("Error:", error));
-  });
-  const [messages, setMessages] = useState<Array<string>>([]);
-  const [newMessage, setNewMessage] = useState<string>("");
-
-  const handleSendMessage = () => {
-    if (newMessage.trim() !== "") {
-      setMessages([...messages, newMessage]);
-      setNewMessage("");
-    }
-  };
-=======
   const [data, setData] = useState<Array<RestaurantType>>([]);
->>>>>>> c4478cd0858d41b3370a90bf4a4c9f6f8c9edea8
 
   return (
     <>
@@ -75,32 +35,10 @@ export default function Home() {
 
       <HomeHeader>Header</HomeHeader>
       <HomeBody>
-<<<<<<< HEAD
         <MapContainer>
-        <MapBox id="map"></MapBox> {/* MapBox 컴포넌트 사용 */}
+          <MapBox id="map"></MapBox> {/* MapBox 컴포넌트 사용 */}
         </MapContainer>
-        <ChatContainer>
-          <ChatHeader>ChatHeader</ChatHeader>
-          <ChatBody>
-            <ChatMessages>
-              {" "}
-              {messages.map((message, index) => (
-                <div key={index} className="message">
-                  {message}
-                </div>
-              ))}
-            </ChatMessages>
-            <ChatInput
-              value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
-            />
-            <button onClick={handleSendMessage}>전송</button>
-          </ChatBody>
-        </ChatContainer>
-=======
-        <MapContainer>MAP</MapContainer>
         <ChatContainer setData={setData} />
->>>>>>> c4478cd0858d41b3370a90bf4a4c9f6f8c9edea8
       </HomeBody>
     </>
   );

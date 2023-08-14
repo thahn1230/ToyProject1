@@ -17,14 +17,9 @@
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.13",
     "next": "^13.4.13",
-<<<<<<< HEAD
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "styled-components": "^6.0.7",
-=======
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
->>>>>>> c4478cd0858d41b3370a90bf4a4c9f6f8c9edea8
     "typescript": "5.1.6"
   },
   "devDependencies": {
