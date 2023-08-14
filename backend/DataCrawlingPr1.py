@@ -10,7 +10,7 @@ import requests
 import urllib.request
 
 ##### for geocoding
-endpoint = "http://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode"
+endpoint = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode"
 q=urllib.parse.quote_plus("서울특별시 강남구 강남대로 310")
 url = f"{endpoint}?query={q}"
 # headers_keys = {
@@ -20,6 +20,7 @@ url = f"{endpoint}?query={q}"
 request =urllib.request.Request(url)
 request.add_header("X-NCP-APIGW-API-KEY-ID","c475psvaa6")
 request.add_header("X-NCP-APIGW-API-KEY", "bSHA0bDTsrc8yNN1egy89UioehVLQptayQynVpWH")
+request.add_header("User-Agent", "Mozilla/5.0")
 res = urllib.request.urlopen(request)
 print(res.read())
 

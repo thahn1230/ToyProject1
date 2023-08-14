@@ -47,10 +47,10 @@ function useMap(data: any) {
 //   }
 
   useEffect(() => {
+    const arr =[]
     for (var restaurant of data) {
-
       //제일 간단한 marker
-      var marker = new naver.maps.Marker({
+      const marker = new naver.maps.Marker({
         position: new naver.maps.LatLng(restaurant.coordinate.latitude,restaurant.coordinate.longitude),
         map: mapRef.current
       });
@@ -90,8 +90,11 @@ function useMap(data: any) {
             content: contentString
         });
 
+        // console.log(marker)
         naver.maps.Event.addListener(marker, "click", function(e) {
           if (infowindow.getMap()) {
+            console.log("marker")
+            console.log(marker)
               infowindow.close();
           } else {
               infowindow.open(mapRef.current, marker);
