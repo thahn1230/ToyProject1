@@ -6,7 +6,7 @@ import styles from "@/styles/Home.module.css";
 import type { NextPage } from "next";
 import styled from "styled-components";
 import useMap from "./useMap";
-
+import useMarker from './useMarker';
 import {
   HomeBody,
   HomeHeader,
@@ -21,10 +21,12 @@ const MapBox = styled.div`
 `;
 
 export default function Home() {
-  useMap();
   const [data, setData] = useState<Array<RestaurantType>>([]);
+  useMap(data);
 
-  useEffect(()=>{console.log(data)}, [data])
+  
+
+  // useEffect(()=>{console.log(data)}, [data])
   return (
     <>
       <Head>
