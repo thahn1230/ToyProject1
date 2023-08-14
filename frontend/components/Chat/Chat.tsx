@@ -35,12 +35,16 @@ const ChatBox = ({
         return response.json();
       })
       .then((response) => {
+        console.log(response);
         setMessages([{ isUser: false, content: response.answer }, ...messages]);
         setData([
           {
             name: "test",
             coordinate: { latitude: 0, longitude: 0 },
             content: null,
+            phone: "010-0000-0000",
+            category: "햄버거",
+            lastOrder: new Date(),
           },
         ]);
         // setData(JSON.parse());
