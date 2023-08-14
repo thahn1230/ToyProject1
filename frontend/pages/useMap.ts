@@ -31,34 +31,55 @@ function useMap(data: any) {
         center: new naver.maps.LatLng(currentPosition[0], currentPosition[1]),
         zoomControl: true,
       });
+
+    
     }
   }, [myLocation]);
 
+  // export interface RestaurantType {
+//     name: string;
+//     category: string;
+//     coordinate: { latitude: number; longitude: number };
+//     location: string;
+//     last_order: string;
+//     contact: string;
+//   }
+
   useEffect(() => {
     for (var restaurant of data) {
-      var newMarker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(
-          restaurant.coordinate.latitude,
-          restaurant.coordinate.longitude
-        ),
-        map: mapRef.current,
-        title: restaurant.name,
-        icon: {
-          content: [
-            '<div class="cs_mapbridge">',
-            '<div class="map_group _map_group crs">',
-            '<div class="map_marker _marker num1 num1_big"> ',
-            '<span class="ico _icon"></span>',
-            '<span class="shd"></span>',
-            "</div>",
-            "</div>",
-            "</div>",
-          ].join(""),
-          size: new naver.maps.Size(38, 58),
-          anchor: new naver.maps.Point(19, 58),
-        },
-        draggable: true,
+
+      //제일 간단한 marker
+      var marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(restaurant.coordinate.latitude,restaurant.coordinate.longitude),
+        map: mapRef.current
       });
+      
+      //marker 지우기
+      marker.setMap(null)
+
+      // var newMarker = new naver.maps.Marker({
+      //   position: new naver.maps.LatLng(
+      //     restaurant.coordinate.latitude,
+      //     restaurant.coordinate.longitude
+      //   ),
+      //   map: mapRef.current,
+      //   title: restaurant.name,
+      //   icon: {
+      //     content: [
+      //       '<div class="cs_mapbridge">',
+      //       '<div class="map_group _map_group crs">',
+      //       '<div class="map_marker _marker num1 num1_big"> ',
+      //       '<span class="ico _icon"></span>',
+      //       '<span class="shd"></span>',
+      //       "</div>",
+      //       "</div>",
+      //       "</div>",
+      //     ].join(""),
+      //     size: new naver.maps.Size(38, 58),
+      //     anchor: new naver.maps.Point(19, 58),
+      //   },
+      //   draggable: true,
+      // });
     }
   }, [data]);
 
