@@ -16,8 +16,8 @@ import ChatContainer from "@/components/Chat/ChatContainer";
 import { RestaurantType } from "@/types/restaurant.type";
 
 const MapBox = styled.div`
-  width: 800px;
-  height: 800px;
+  width: 100%;
+  height: 100%;
 `;
 
 export default function Home() {
