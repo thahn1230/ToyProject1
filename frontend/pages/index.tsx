@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Head from "next/head";
+<<<<<<< HEAD
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
@@ -8,18 +9,15 @@ import styled from 'styled-components';
 import useMap from './useMap';
 
 
+=======
+>>>>>>> c4478cd0858d41b3370a90bf4a4c9f6f8c9edea8
 import {
-  ChatBody,
-  ChatContainer,
-  ChatHeader,
-  ChatInput,
-  ChatMessages,
   HomeBody,
   HomeHeader,
   MapContainer,
 } from "../components/home/home.styles";
-
-// const inter = Inter({ subsets: ["latin"] });
+import ChatContainer from "@/components/Chat/ChatContainer";
+import { RestaurantType } from "@/types/restaurant.type";
 
 const MapBox = styled.div`
   width: 800px;
@@ -28,6 +26,7 @@ const MapBox = styled.div`
 
 
 export default function Home() {
+<<<<<<< HEAD
 
   useMap();
   const [data, setData] = useState([]);
@@ -61,6 +60,9 @@ export default function Home() {
       setNewMessage("");
     }
   };
+=======
+  const [data, setData] = useState<Array<RestaurantType>>([]);
+>>>>>>> c4478cd0858d41b3370a90bf4a4c9f6f8c9edea8
 
   return (
     <>
@@ -73,6 +75,7 @@ export default function Home() {
 
       <HomeHeader>Header</HomeHeader>
       <HomeBody>
+<<<<<<< HEAD
         <MapContainer>
         <MapBox id="map"></MapBox> {/* MapBox 컴포넌트 사용 */}
         </MapContainer>
@@ -94,6 +97,10 @@ export default function Home() {
             <button onClick={handleSendMessage}>전송</button>
           </ChatBody>
         </ChatContainer>
+=======
+        <MapContainer>MAP</MapContainer>
+        <ChatContainer setData={setData} />
+>>>>>>> c4478cd0858d41b3370a90bf4a4c9f6f8c9edea8
       </HomeBody>
     </>
   );
