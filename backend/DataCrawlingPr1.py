@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 from selenium.webdriver.common.keys import Keys
 import time
 from selenium.common.exceptions import TimeoutException
+from geopy.geocoders import Nominatim
 
 # Initialize the Chrome WebDriver
 driver = webdriver.Chrome()
