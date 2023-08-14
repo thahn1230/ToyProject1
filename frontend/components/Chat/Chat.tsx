@@ -1,9 +1,16 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Message } from "@/types/message.type";
+// import { Message } from "@/types/message.type";
 import { ChatMessageWrapper, ChatMessages } from "./Chat.styles";
 import ChatInput from "./ChatInput";
 import { RestaurantType } from "@/types/restaurant.type";
 import ChatMessage from "./ChatMessage";
+import {
+  MainContainer,
+  ChatContainer,
+  MessageList,
+  Message,
+  MessageInput,
+} from "@chatscope/chat-ui-kit-react";
 
 const ChatBox = ({
   data,
