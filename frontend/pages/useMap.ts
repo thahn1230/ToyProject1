@@ -76,14 +76,14 @@ function useMap(data: any) {
       // });
 
       var contentString = [
-              '<div class="cs_mapbridge">',
-              '<div class="map_group _map_group crs">',
-              '<div class="map_marker _marker num1 num1_big"> ',
-              '<span class="ico _icon"></span>',
-              '<span class="shd"></span>',
-              "</div>",
-              "</div>",
-              "</div>",
+        '<div class="iw_inner">',
+            '   <h3>{restaurant.name}</h3>',
+            // '   <p>{res.contact}<br>',
+            // '       <img src="./img/hi-seoul.jpg" width="55" height="55" alt="서울시청" class="thumb" /><br>',
+            // '       02-120 | 공공,사회기관 > 특별,광역시청<br>',
+            // '       <a href="http://www.seoul.go.kr" target="_blank">www.seoul.go.kr/</a>',
+            // '   </p>',
+            '</div>'
         ].join('');
 
         var infowindow = new naver.maps.InfoWindow({
