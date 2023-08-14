@@ -53,7 +53,6 @@ const ChatInput = ({
         style={{
           width: "80%",
           height: "50px",
-          // borderRadius: "5px",
           border: "none",
         }}
         value={newMessage}

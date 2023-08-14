@@ -6,14 +6,20 @@ import { RestaurantType } from "@/types/restaurant.type";
 const ChatContainer = ({
   data,
   setData,
+  setRestaurant,
 }: {
   data: RestaurantType[];
   setData: Dispatch<SetStateAction<RestaurantType[]>>;
+  setRestaurant: Dispatch<SetStateAction<RestaurantType | null>>;
 }) => {
   return (
     <ChatContainerWrapper>
       <ChatBody>
-        <ChatBox data={data} setData={setData}></ChatBox>
+        <ChatBox
+          data={data}
+          setData={setData}
+          setRestaurant={setRestaurant}
+        ></ChatBox>
       </ChatBody>
     </ChatContainerWrapper>
   );

@@ -6,13 +6,12 @@ import { RestaurantType } from "@/types/restaurant.type";
 import ChatMessage from "./ChatMessage";
 
 const ChatBox = ({
-  data,
   setData,
   setRestaurant,
 }: {
   data: RestaurantType[];
   setData: Dispatch<SetStateAction<RestaurantType[]>>;
-  setRestaurant: Dispatch<SetStateAction<RestaurantType>>;
+  setRestaurant: Dispatch<SetStateAction<RestaurantType | null>>;
 }) => {
   const [messages, setMessages] = useState<Array<Message>>([]);
 
@@ -63,7 +62,13 @@ const ChatBox = ({
     <>
       <ChatMessages>
         {messages.map((message, index) => {
-          return <ChatMessage key={index} message={message}></ChatMessage>;
+          return (
+            <ChatMessage
+              key={index}
+              message={message}
+              setRestaurant={setRestaurant}
+            ></ChatMessage>
+          );
         })}
       </ChatMessages>
       <ChatInput messages={messages} setMessages={setMessages} />

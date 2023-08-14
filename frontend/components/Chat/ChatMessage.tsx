@@ -13,7 +13,7 @@ const ChatMessage = ({
   setRestaurant,
 }: {
   message: Message;
-  setRestaurant: Dispatch<SetStateAction<RestaurantType>>;
+  setRestaurant: Dispatch<SetStateAction<RestaurantType | null>>;
 }) => {
   const [restaurants, setRestaurants] = useState<JSX.Element[]>([]);
   const onResturantClick = (restaurant: RestaurantType) => {
@@ -23,22 +23,9 @@ const ChatMessage = ({
     const updatedRestaurants = message.restaurants.map(
       (restaurant: RestaurantType, index: number) => {
         return (
-          // <div
-          //   key={index}
-          //   style={{
-          //     border: "1px solid black",
-          //     borderRadius: "10px",
-          //     padding: "5px 5px",
-          //     width: "90%",
-          //     backgroundColor: "white",
-          //     // backgroundColor: "#74DF00",ㄴ
-          //     margin: "10px",
-          //   }}
-          //   >
-          // </div>
           <ChatMessageRestaurantWrapper
             key={index}
-            onClick={setRestaurant(restaurant)}
+            onClick={onResturantClick.bind(null, restaurant)}
           >
             <ChatMessageRestaurantTextWrapper>
               {restaurant.name}
