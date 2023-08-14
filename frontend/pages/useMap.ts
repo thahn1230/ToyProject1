@@ -6,6 +6,7 @@ function useMap(data: any) {
   const [myLocation, setMyLocation] = useState<
     { latitude: number; longitude: number } | string
   >("");
+  const [markers, setMarkers] = useState<naver.maps.Marker[]>([])
 
   useEffect(() => {
     // geolocation 이용 현재 위치 확인, 위치 미동의 시 기본 위치로 지정
@@ -46,38 +47,44 @@ function useMap(data: any) {
 //     contact: string;
 //   }
 
-  useEffect(() => {
-    const arr =[]
-    for (var restaurant of data) {
-      (function(restaurant) { // IIFE (즉시 호출되는 함수 표현식) 사용
-        var marker = new naver.maps.Marker({
-          position: new naver.maps.LatLng(restaurant.coordinate.latitude, restaurant.coordinate.longitude),
-          map: mapRef.current,
-        });
+useEffect(() => {
+  // 기존 마커 제거
+  for(var i in markers)
+  {
+    markers[i].setMap(null)
+  }
+  // 새로운 마커 생성
+  for (var restaurant of data) {
+    (function(restaurant) {
+      var marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(restaurant.coordinate.latitude, restaurant.coordinate.longitude),
+        map: mapRef.current,
+      });
+      markers.push(marker)
 
-        var contentString = [
-          '<div class="iw_inner">',
-          '   <h3>' + restaurant.name + '</h3>',
-          '   <h3>' + restaurant.category + '</h3>',
-          '   <h3>' + restaurant.last_order + '</h3>',
-          '   <h3>' + restaurant.contact + '</h3>',
-          '</div>',
-        ].join('');
+      var contentString = [
+        '<div class="iw_inner">',
+        '   <h3>' + restaurant.name + '</h3>',
+        '   <h3>' + restaurant.category + '</h3>',
+        '   <h3>' + restaurant.last_order + '</h3>',
+        '   <h3>' + restaurant.contact + '</h3>',
+        '</div>',
+      ].join('');
 
-        var infowindow = new naver.maps.InfoWindow({
-          content: contentString,
-        });
+      var infowindow = new naver.maps.InfoWindow({
+        content: contentString,
+      });
 
-        naver.maps.Event.addListener(marker, "click", function (e) {
-          if (infowindow.getMap()) {
-            infowindow.close();
-          } else {
-            infowindow.open(mapRef.current, marker);
-          }
-        });
-      })(restaurant); // IIFE에 현재 반복의 restaurant를 전달
-    }
-  }, [data]);
+      naver.maps.Event.addListener(marker, "click", function (e) {
+        if (infowindow.getMap()) {
+          infowindow.close();
+        } else {
+          infowindow.open(mapRef.current, marker);
+        }
+      });
+    })(restaurant);
+  }
+}, [data]);
 
 
 
