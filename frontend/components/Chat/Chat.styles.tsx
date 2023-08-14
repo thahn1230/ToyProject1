@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 
 export const ChatContainerWrapper = styled.div`
-  width: 20%;
+  width: 30%;
   height: 100%;
   border: 1px solid blue;
 `;

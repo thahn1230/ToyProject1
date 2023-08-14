@@ -35,9 +35,11 @@ const ChatBox = ({
         return response.json();
       })
       .then((response) => {
-        console.log(JSON.parse(response.answer).restaurants)
-        setMessages([{ isUser: false, content: JSON.parse(response.answer).message }, ...messages]);
-
+        console.log(JSON.parse(response.answer).restaurants);
+        setMessages([
+          { isUser: false, content: JSON.parse(response.answer).message },
+          ...messages,
+        ]);
 
         setData(JSON.parse(response.answer).restaurants);
         // setData(JSON.parse());
