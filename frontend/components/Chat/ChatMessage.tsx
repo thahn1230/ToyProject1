@@ -6,25 +6,40 @@ import {
   ChatMessageWrapper,
 } from "./Chat.styles";
 import { Message } from "@/types/message.type";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-const ChatMessage = ({ message }: { message: Message }) => {
+const ChatMessage = ({
+  message,
+  setRestaurant,
+}: {
+  message: Message;
+  setRestaurant: Dispatch<SetStateAction<RestaurantType>>;
+}) => {
   const [restaurants, setRestaurants] = useState<JSX.Element[]>([]);
+  const onResturantClick = (restaurant: RestaurantType) => {
+    setRestaurant(restaurant);
+  };
   useEffect(() => {
-    const updatedRestaurants = message.restaurants.map((restaurant, index) => {
-      return (
-        <div
-          style={{
-            border: "1px solid black",
-            borderRadius: "10px",
-            padding: "5px 5px",
-            width: "90%",
-            backgroundColor: "white",
-            // backgroundColor: "#74DF00",ㄴ
-            margin: "10px",
-          }}
-        >
-          <ChatMessageRestaurantWrapper key={index}>
+    const updatedRestaurants = message.restaurants.map(
+      (restaurant: RestaurantType, index: number) => {
+        return (
+          // <div
+          //   key={index}
+          //   style={{
+          //     border: "1px solid black",
+          //     borderRadius: "10px",
+          //     padding: "5px 5px",
+          //     width: "90%",
+          //     backgroundColor: "white",
+          //     // backgroundColor: "#74DF00",ㄴ
+          //     margin: "10px",
+          //   }}
+          //   >
+          // </div>
+          <ChatMessageRestaurantWrapper
+            key={index}
+            onClick={setRestaurant(restaurant)}
+          >
             <ChatMessageRestaurantTextWrapper>
               {restaurant.name}
             </ChatMessageRestaurantTextWrapper>
@@ -32,9 +47,9 @@ const ChatMessage = ({ message }: { message: Message }) => {
               {restaurant.contact}
             </ChatMessageRestaurantTextWrapper>
           </ChatMessageRestaurantWrapper>
-        </div>
-      );
-    });
+        );
+      }
+    );
     setRestaurants(updatedRestaurants);
   }, [message]);
 
