@@ -3,6 +3,11 @@ import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
+import type { NextPage } from 'next';
+import styled from 'styled-components';
+import useMap from './useMap';
+
+
 import {
   ChatBody,
   ChatContainer,
@@ -16,7 +21,15 @@ import {
 
 // const inter = Inter({ subsets: ["latin"] });
 
+const MapBox = styled.div`
+  width: 800px;
+  height: 800px;
+`;
+
+
 export default function Home() {
+
+  useMap();
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -60,7 +73,9 @@ export default function Home() {
 
       <HomeHeader>Header</HomeHeader>
       <HomeBody>
-        <MapContainer>MAP</MapContainer>
+        <MapContainer>
+        <MapBox id="map"></MapBox> {/* MapBox 컴포넌트 사용 */}
+        </MapContainer>
         <ChatContainer>
           <ChatHeader>ChatHeader</ChatHeader>
           <ChatBody>

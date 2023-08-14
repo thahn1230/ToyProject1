@@ -16,9 +16,15 @@
     "@types/react-dom": "18.2.7",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.13",
-    "next": "13.4.13",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
+    "next": "^13.4.13",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "styled-components": "^6.0.7",
     "typescript": "5.1.6"
+  },
+  "devDependencies": {
+    "@types/navermaps": "^3.6.5",
+    "@types/styled-components": "^5.1.26",
+    "babel-plugin-styled-components": "^2.1.4"
   }
 }
