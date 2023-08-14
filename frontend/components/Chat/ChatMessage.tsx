@@ -15,11 +15,12 @@ const ChatMessage = ({ message }: { message: Message }) => {
       return (
         <div
           style={{
-            // border: "1px solid black",
+            border: "1px solid black",
             borderRadius: "10px",
             padding: "5px 5px",
             width: "90%",
-            backgroundColor: "#62E447",
+            backgroundColor: "white",
+            // backgroundColor: "#74DF00",ㄴ
             margin: "10px",
           }}
         >
@@ -57,7 +58,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
       <ChatMessageTextWrapper
         style={{
           alignItems: message.isUser ? "flex-end" : "flex-start",
-          backgroundColor: message.isUser ? "#e6e5eb" : "#6DCD59",
+          backgroundColor: message.isUser ? "#e6e5eb" : "#F7D358",
           //   color: message.isUser ? "black" : "white",
           borderRadius: message.isUser
             ? "20px 0px 20px 20px"

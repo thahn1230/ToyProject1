@@ -85,5 +85,17 @@ export const ChatInputWrapper = styled.div`
   flex-direction: row;
   justify-content: space-evenly;
   align-items: center;
-  // border: 1px solid black;
+  border: 1px solid black;
+`;
+
+export const ChatInputButton = styled.button`
+  width: 30px;
+  height: 30px;
+  border: 1px solid black;
+  border-radius: 50%;
+  &:hover {
+    background-color: black;
+    color: white;
+    transition: 0.5s;
+  }
 `;
