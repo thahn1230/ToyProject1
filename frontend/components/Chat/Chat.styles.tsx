@@ -32,14 +32,36 @@ export const ChatMessages = styled.div`
   border: 1px solid black;
 `;
 
-export const ChatMessage = styled.div`
+export const ChatMessageWrapper = styled.div`
   width: 90%;
   height: auto;
   display: flex;
+  flex-direction: column;
   border: 1px solid black;
   margin: 2px;
   flex-shrink: 0;
   word-break: break-all;
+`;
+
+export const ChatMessageTextWrapper = styled.div`
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  margin: 2px;
+  flex-shrink: 0;
+  word-break: break-all;
+`;
+
+export const ChatMessageRestaurantWrapper = styled.div`
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+  margin: 2px;
+  flex-shrink: 0;
 `;
 
 export const ChatInputWrapper = styled.div`
