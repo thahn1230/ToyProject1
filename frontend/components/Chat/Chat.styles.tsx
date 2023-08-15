@@ -3,6 +3,7 @@ import styled from "@emotion/styled";
 export const ChatContainerWrapper = styled.div`
   width: 30%;
   height: 100%;
+  padding: 3%;
   // border: 1px solid blue;
 `;
 
@@ -13,9 +14,11 @@ export const ChatBody = styled.div`
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  background-color: lightgray;
-
+  // background-color: lightgray;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
   // border: 1px solid black;
+  padding: 5px;
 `;
 
 export const ChatMessages = styled.div`
