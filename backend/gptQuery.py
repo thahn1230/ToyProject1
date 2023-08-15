@@ -11,50 +11,41 @@ from datetime import datetime
 
 import json
 
-router = APIRouter()
+GPT_Router = APIRouter()
 
 openai.api_key = GPT_API_KEY
 
 
-@router.get("/")
+@GPT_Router.get("/")
 def read_root():
     return {"message": "Hello World!"}
 
 
-@router.get("/test")
-def test(params: dict):
-    return {"query": "query here", "answer": "answer here", "method": "post"}
-
-
-@router.post("/test")
-def test(params: dict):
-    print(params)
-
-    return {"query": "query here", "answer": "answer here", "method": "post"}
-
-
-@router.post("/test/query")
+@GPT_Router.post("/query")
 def generate_response(params: dict):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
             {
                 "role": "system",
-                "content": "You have to answer in the following format : {message : string, restaurants: {name: string;category: string;coordinate: { latitude: number; longitude: number };location: string;last_order: string;contact: string;}[]}."
-                + "And content of message must be korean."
-                + "List of resturants will be given. And in the restaurants[] you should choose objects among them. "
-                + "restaurants[] can be an empty array if there is no corresponding data. "
+                "content": "Please respond in the specified format: {message: string, restaurants: [{name: string, category: string, coordinate: {latitude: number, longitude: number}, location: string, last_order: string, contact: string}]}."
+                + "Ensure your response is in Korean."
+                + "You will receive a list of restaurants, and you should select objects from them."
+                + "If there is no relevant data, leave the restaurants[] empty."
             },
-            {"role": "system", "content": "List of data is as follows : " + test_data},
+            {"role": "system",
+                "content": "The list of available data is as follows: " + test_data},
             {
                 "role": "system",
-                "content": "Time now is : "
+                "content": "The current time is: "
                 + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                + " so your answer must include open restaurants only.",
+                + " Your response should only include currently open restaurants from the given list.",
             },
             {"role": "user", "content": params["message"]},
         ],
         temperature=0,
+
+
     )
 
     # Print the generated response
@@ -64,7 +55,7 @@ def generate_response(params: dict):
 
 
 # for testing. ignore it
-@router.get("/test/query/asd")
+@GPT_Router.get("/query/test")
 def test_response():
     print("hi")
     response = openai.ChatCompletion.create(
