@@ -48,7 +48,7 @@ async def sign_up(params: dict):
     idDupQuery = f"""
         SELECT *
         FROM db.user_information
-        WHERE id = "{user_id}" AND password = "{password}"
+        WHERE id = "{user_id}";
     """
 
     login_df = pd.read_sql(idDupQuery, engine)
@@ -60,7 +60,7 @@ async def sign_up(params: dict):
         session.execute(
             text(
                 """
-                INSERT INTO user_information VALUES (:id, :password, :name);
+                INSERT INTO db.user_information VALUES (:id, :password, :name);
             """
             ),
             {"id": user_id, "password": password, "name": name}

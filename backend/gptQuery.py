@@ -59,7 +59,7 @@ def generate_response(params: dict):
 def test_response():
     print("hi")
     response = openai.ChatCompletion.create(
-        model="gpt-4-0613",
+        model="gpt-4",
         messages=[
             {
                 "role": "system",
