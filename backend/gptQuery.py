@@ -54,8 +54,8 @@ def generate_response(params: dict):
     return {"answer": response.choices[0].message["content"]}
 
 
-# for testing. ignore it
-@GPT_Router.get("/query/test")
+# Everything below stands for testing. Ignore them.
+@GPT_Router.get("/query/test/1")
 def test_response():
     print("hi")
     response = openai.ChatCompletion.create(
@@ -68,6 +68,32 @@ def test_response():
                 + "In the restaurants array, there should be objects in list below."
                 + "In the restaurants array, ther should be additional information, which is the coordinate of the restaurant. You have to convert location into coordinate. "
                 + "Your restaurants[] must be part of List of data below. restaurants[] can be an empty array. "
+            },
+            {"role": "system", "content": "List of data is as follows : " + test_data},
+            {
+                "role": "system",
+                "content": "Time now is : "
+                + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                + " so your answer must include open restaurants.",
+            },
+            {"role": "user", "content": "recommend me some japanese food."},
+        ],
+        temperature=0.2,
+    )
+
+    # Print the generated response
+    print(response.choices[0].message["content"])
+    return response.choices[0].message["content"]
+
+@GPT_Router.get("/query/test/2")
+def test_response():
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {
+                "role": "system",
+                "content": "for every object in the restaurants list, you have to check if the restaurant is open or not"
+                + ""
             },
             {"role": "system", "content": "List of data is as follows : " + test_data},
             {
