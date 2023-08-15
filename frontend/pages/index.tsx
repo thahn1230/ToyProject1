@@ -6,7 +6,7 @@ import styles from "@/styles/Home.module.css";
 import type { NextPage } from "next";
 import styled from "styled-components";
 import useMap from "./useMap";
-import useMarker from "./useMarker";
+
 import {
   HomeBody,
   HomeHeader,
@@ -14,37 +14,15 @@ import {
 } from "../components/home/home.styles";
 import ChatContainer from "@/components/Chat/ChatContainer";
 import { RestaurantType } from "@/types/restaurant.type";
-
-const MapBox = styled.div`
-  width: 100%;
-  height: 100%;
-`;
+import HeaderLeft from "@/components/Header/HeaderLeft";
+import HeaderRight from "@/components/Header/HederRight";
+import { BrowserRouter, Route } from "react-router-dom";
+import Link from "next/link";
 
 export default function Home() {
-  const [data, setData] = useState<Array<RestaurantType>>([]);
-  useMap(data);
-
-  const [selectedRestaurant, setSelectedRestaurant] =
-    useState<RestaurantType | null>(null);
-
   return (
-    <>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <HomeHeader>Header</HomeHeader>
-      <HomeBody>
-        <MapContainer>
-          <MapBox id="map"></MapBox> {/* MapBox 컴포넌트 사용 */}
-        </MapContainer>
-        <ChatContainer
-          data={data}
-          setData={setData}
-          setRestaurant={setSelectedRestaurant}
-        />
-      </HomeBody>
-    </>
+    <Link href="/home">
+      <a>Home</a>
+    </Link>
   );
 }
