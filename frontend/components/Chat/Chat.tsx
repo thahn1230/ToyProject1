@@ -1,23 +1,17 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-// import { Message } from "@/types/message.type";
+import { Message } from "@/types/message.type";
 import { ChatMessageWrapper, ChatMessages } from "./Chat.styles";
 import ChatInput from "./ChatInput";
 import { RestaurantType } from "@/types/restaurant.type";
 import ChatMessage from "./ChatMessage";
-import {
-  MainContainer,
-  ChatContainer,
-  MessageList,
-  Message,
-  MessageInput,
-} from "@chatscope/chat-ui-kit-react";
 
 const ChatBox = ({
-  data,
   setData,
+  setRestaurant,
 }: {
   data: RestaurantType[];
   setData: Dispatch<SetStateAction<RestaurantType[]>>;
+  setRestaurant: Dispatch<SetStateAction<RestaurantType | null>>;
 }) => {
   const [messages, setMessages] = useState<Array<Message>>([]);
 
@@ -28,7 +22,7 @@ const ChatBox = ({
   }, [messages]);
 
   const PostMessage = (message: string) => {
-    fetch("http://localhost:8000/test/query", {
+    fetch("http://localhost:8000/query", {
       method: "POST",
       headers: {
         Authorization: `Bearer`,
@@ -68,7 +62,13 @@ const ChatBox = ({
     <>
       <ChatMessages>
         {messages.map((message, index) => {
-          return <ChatMessage key={index} message={message}></ChatMessage>;
+          return (
+            <ChatMessage
+              key={index}
+              message={message}
+              setRestaurant={setRestaurant}
+            ></ChatMessage>
+          );
         })}
       </ChatMessages>
       <ChatInput messages={messages} setMessages={setMessages} />

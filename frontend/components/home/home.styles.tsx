@@ -1,8 +1,12 @@
 import styled from "@emotion/styled";
 
 export const HomeHeader = styled.header`
-  display: flex;
   width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0px 10px;
   height: 10vh;
   background-color: #0b6121;
 `;

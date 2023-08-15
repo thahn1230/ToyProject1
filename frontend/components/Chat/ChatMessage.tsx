@@ -6,24 +6,27 @@ import {
   ChatMessageWrapper,
 } from "./Chat.styles";
 import { Message } from "@/types/message.type";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-const ChatMessage = ({ message }: { message: Message }) => {
+const ChatMessage = ({
+  message,
+  setRestaurant,
+}: {
+  message: Message;
+  setRestaurant: Dispatch<SetStateAction<RestaurantType | null>>;
+}) => {
   const [restaurants, setRestaurants] = useState<JSX.Element[]>([]);
+  const onResturantClick = (restaurant: RestaurantType) => {
+    setRestaurant(restaurant);
+  };
   useEffect(() => {
-    const updatedRestaurants = message.restaurants.map((restaurant, index) => {
-      return (
-        <div
-          style={{
-            // border: "1px solid black",
-            borderRadius: "10px",
-            padding: "5px 5px",
-            width: "90%",
-            backgroundColor: "#62E447",
-            margin: "10px",
-          }}
-        >
-          <ChatMessageRestaurantWrapper key={index}>
+    const updatedRestaurants = message.restaurants.map(
+      (restaurant: RestaurantType, index: number) => {
+        return (
+          <ChatMessageRestaurantWrapper
+            key={index}
+            onClick={onResturantClick.bind(null, restaurant)}
+          >
             <ChatMessageRestaurantTextWrapper>
               {restaurant.name}
             </ChatMessageRestaurantTextWrapper>
@@ -31,9 +34,9 @@ const ChatMessage = ({ message }: { message: Message }) => {
               {restaurant.contact}
             </ChatMessageRestaurantTextWrapper>
           </ChatMessageRestaurantWrapper>
-        </div>
-      );
-    });
+        );
+      }
+    );
     setRestaurants(updatedRestaurants);
   }, [message]);
 
@@ -57,7 +60,7 @@ const ChatMessage = ({ message }: { message: Message }) => {
       <ChatMessageTextWrapper
         style={{
           alignItems: message.isUser ? "flex-end" : "flex-start",
-          backgroundColor: message.isUser ? "#e6e5eb" : "#6DCD59",
+          backgroundColor: message.isUser ? "#e6e5eb" : "#F7D358",
           //   color: message.isUser ? "black" : "white",
           borderRadius: message.isUser
             ? "20px 0px 20px 20px"
