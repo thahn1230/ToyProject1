@@ -9,6 +9,7 @@ export const HomeHeader = styled.header`
   padding: 0px 10px;
   height: 10vh;
   background-color: #0b6121;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
 `;
 
 export const HomeBody = styled.div`
@@ -21,7 +22,7 @@ export const HomeBody = styled.div`
   margin: 0px;
 `;
 export const MapContainer = styled.div`
+  padding: 3%;
   width: 80%;
   height: 100%;
-  background-color: #f0f0f0;
 `;

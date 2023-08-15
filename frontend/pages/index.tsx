@@ -19,10 +19,41 @@ import HeaderRight from "@/components/Header/HederRight";
 import { BrowserRouter, Route } from "react-router-dom";
 import Link from "next/link";
 
+const MapBox = styled.div`
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+`;
+
 export default function Home() {
+  const [data, setData] = useState<Array<RestaurantType>>([]);
+  useMap(data);
+
+  const [selectedRestaurant, setSelectedRestaurant] =
+    useState<RestaurantType | null>(null);
+
   return (
-    <Link href="/home">
-      <a>Home</a>
-    </Link>
+    <>
+      <Head>
+        <title>Create Next App</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <HomeHeader>
+        <HeaderLeft />
+        <HeaderRight />
+      </HomeHeader>
+      <HomeBody>
+        <MapContainer>
+          <MapBox id="map"></MapBox> {/* MapBox 컴포넌트 사용 */}
+        </MapContainer>
+        <ChatContainer
+          data={data}
+          setData={setData}
+          setRestaurant={setSelectedRestaurant}
+        />
+      </HomeBody>
+    </>
   );
 }
