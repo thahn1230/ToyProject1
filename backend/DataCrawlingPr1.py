@@ -46,11 +46,11 @@ MAX_RETRIES = 5
 name_before = ""
 
 # For fast crawling, only for testing
-nextPage.click()
-nextPage.click()
-nextPage.click()
-nextPage.click()
-time.sleep(1)
+# nextPage.click()
+# nextPage.click()
+# nextPage.click()
+# nextPage.click()
+# time.sleep(1)
 
 new_test_data = ""
 while(True):
@@ -107,7 +107,10 @@ while(True):
 
 
         new_test_data += new_restaurant
-        print(new_restaurant)
+        print(open_status)
+        # print(new_restaurant)
+
+
         # print("{")
         # print("name : " + name)
         # print("category : " +category)

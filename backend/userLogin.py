@@ -33,9 +33,9 @@ async def login(params: dict):
     login_df = pd.read_sql(query, engine)
 
     if login_df.empty:
-        return {"status": False, "token": ""}
+        return {"status": False, "token": "", "name":""}
     else:
-        return {"status": True, "token": user_id}
+        return {"status": True, "token": user_id, "name":login_df['name'][0]}
 
 
 # 회원가입
@@ -48,7 +48,7 @@ async def sign_up(params: dict):
     idDupQuery = f"""
         SELECT *
         FROM db.user_information
-        WHERE id = "{user_id}" AND password = "{password}"
+        WHERE id = "{user_id}";
     """
 
     login_df = pd.read_sql(idDupQuery, engine)
@@ -60,7 +60,7 @@ async def sign_up(params: dict):
         session.execute(
             text(
                 """
-                INSERT INTO user_information VALUES (:id, :password, :name);
+                INSERT INTO db.user_information VALUES (:id, :password, :name);
             """
             ),
             {"id": user_id, "password": password, "name": name}
