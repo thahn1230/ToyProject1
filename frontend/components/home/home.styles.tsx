@@ -8,8 +8,10 @@ export const HomeHeader = styled.header`
   align-items: center;
   padding: 0px 10px;
   height: 10vh;
-  background-color: #0b6121;
-  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+  // background-color: #0b6121;
+  opacity: 1;
+  box-shadow: 0px 0px 10px 0px rgba(4, 38, 13, 0.6);
+  z-index: 2;
 `;
 
 export const HomeBody = styled.div`
@@ -20,7 +22,11 @@ export const HomeBody = styled.div`
   justify-content: space-evenly;
   align-items: center;
   margin: 0px;
+  background-color: #f2f2f2;
+  opacity: 0.8;
+  z-index: 1;
 `;
+
 export const MapContainer = styled.div`
   padding: 3%;
   width: 80%;

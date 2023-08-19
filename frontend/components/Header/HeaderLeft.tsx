@@ -10,7 +10,7 @@ const HeaderLeft = () => {
           fontFamily: "Roboto, sans-serif",
           fontSize: "1.6rem",
           fontWeight: "800",
-          color: "white",
+          color: "black",
           margin: "30px",
         }}
       >

@@ -45,13 +45,13 @@ const HeaderRight = () => {
               justifyContent: "space-evenly",
               alignItems: "center",
               fontFamily: "Roboto, sans-serif",
-              color: "white",
+              color: "black",
               fontWeight: "bold",
               fontSize: "1rem",
               // border: "1px solid black",
             }}
           >
-            <div>로그인해주세요</div>
+            <div>로그인</div>
             <FiLogIn style={{ width: "25px", height: "25px" }}></FiLogIn>
           </Link>
         </LoginButton>
