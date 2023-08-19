@@ -29,6 +29,12 @@ class TokenData(BaseModel):
 def verify_user(token: str = Depends(oauth2_scheme)) -> str: # check_user_permission
     return decode_jwt_token(token)
 
+
+# Endpoint to retrieve reviews for a specific user
+@router.get("/user/reviews")
+def get_user_info(token: TokenData = Depends(verify_user)): 
+    return 0
+# not yet updated
 @router.get("/user/profile")
 def get_user_info(token: TokenData = Depends(verify_user)): 
     query = f"""
@@ -57,6 +63,7 @@ def get_user_info(token: TokenData = Depends(verify_user)):
             }
 
 
+# not yet updated
 @router.post("/user/change_info")
 async def change_user_info(params: dict, token: TokenData = Depends(verify_user)):
 
@@ -99,6 +106,7 @@ async def change_user_info(params: dict, token: TokenData = Depends(verify_user)
 
     return True
 
+# not yet updated
 @router.post("/user/change_pw")
 async def change_password(params: dict, token: TokenData = Depends(verify_user)):
     user_id = token["id"]
