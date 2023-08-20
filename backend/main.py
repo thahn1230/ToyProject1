@@ -1,8 +1,11 @@
 from fastapi import FastAPI
 from mangum import Mangum
+
+from fastapi.middleware.cors import CORSMiddleware
+
 from gptQuery import GPT_Router
 from userLogin import LoginRouter
-from fastapi.middleware.cors import CORSMiddleware
+from user import UserRouter
 
 app = FastAPI()
 
@@ -22,5 +25,6 @@ app.add_middleware(
 # Include routers
 app.include_router(GPT_Router)
 app.include_router(LoginRouter)
+app.include_router(UserRouter)
 
 handler = Mangum(app)
