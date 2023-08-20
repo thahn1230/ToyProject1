@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import ChatBox from "./Chat";
-import { ChatBody, ChatContainerWrapper, ChatHeader } from "./Chat.styles";
+import { ChatBody, ChatContainerWrapper } from "./Chat.styles";
 import { RestaurantType } from "@/types/restaurant.type";
 
 const ChatContainer = ({

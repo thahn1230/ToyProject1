@@ -16,9 +16,18 @@ const ChatMessage = ({
   setRestaurant: Dispatch<SetStateAction<RestaurantType | null>>;
 }) => {
   const [restaurants, setRestaurants] = useState<JSX.Element[]>([]);
+  const [selectedRestaurant, setSelectedRestaurant] =
+    useState<RestaurantType | null>(null);
   const onResturantClick = (restaurant: RestaurantType) => {
+    if (selectedRestaurant?.name === restaurant.name) {
+      setRestaurant(null);
+      setSelectedRestaurant(null);
+      return;
+    }
     setRestaurant(restaurant);
+    setSelectedRestaurant(restaurant);
   };
+
   useEffect(() => {
     const updatedRestaurants = message.restaurants.map(
       (restaurant: RestaurantType, index: number) => {
@@ -26,19 +35,23 @@ const ChatMessage = ({
           <ChatMessageRestaurantWrapper
             key={index}
             onClick={onResturantClick.bind(null, restaurant)}
+            selected={selectedRestaurant?.name === restaurant.name}
           >
-            <ChatMessageRestaurantTextWrapper>
+            <ChatMessageRestaurantTextWrapper role="title">
               {restaurant.name}
             </ChatMessageRestaurantTextWrapper>
             <ChatMessageRestaurantTextWrapper>
-              {restaurant.contact}
+              {restaurant.category}
+            </ChatMessageRestaurantTextWrapper>
+            <ChatMessageRestaurantTextWrapper>
+              {restaurant.last_order}
             </ChatMessageRestaurantTextWrapper>
           </ChatMessageRestaurantWrapper>
         );
       }
     );
     setRestaurants(updatedRestaurants);
-  }, [message]);
+  }, [message, selectedRestaurant]);
 
   //   console.log(message);
   return (
@@ -60,15 +73,17 @@ const ChatMessage = ({
       <ChatMessageTextWrapper
         style={{
           alignItems: message.isUser ? "flex-end" : "flex-start",
-          backgroundColor: message.isUser ? "#e6e5eb" : "#F7D358",
-          //   color: message.isUser ? "black" : "white",
+          backgroundColor: message.isUser ? "white" : "#229954",
+          color: message.isUser ? "black" : "white",
           borderRadius: message.isUser
             ? "20px 0px 20px 20px"
             : "0px 20px 20px 20px",
         }}
       >
-        {message.message}
-        {restaurants}
+        <div style={{ opacity: "1" }}>
+          {message.message}
+          {restaurants}
+        </div>
       </ChatMessageTextWrapper>
     </ChatMessageWrapper>
   );

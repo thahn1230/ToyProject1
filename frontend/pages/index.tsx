@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import type { NextPage } from "next";
 import styled from "styled-components";
-import useMap from "./useMap";
+import useMap from "../hooks/useMap";
 
 import {
   HomeBody,
@@ -27,16 +27,15 @@ const MapBox = styled.div`
 `;
 
 export default function Home() {
-  const [data, setData] = useState<Array<RestaurantType>>([]);
-  useMap(data);
-
   const [selectedRestaurant, setSelectedRestaurant] =
     useState<RestaurantType | null>(null);
 
+  const [data, setData] = useState<Array<RestaurantType>>([]);
+  useMap(data, selectedRestaurant, setSelectedRestaurant);
   return (
     <>
       <Head>
-        <title>Create Next App</title>
+        <title>율맛추</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <HomeHeader>

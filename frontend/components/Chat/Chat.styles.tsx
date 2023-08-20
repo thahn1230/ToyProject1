@@ -49,10 +49,12 @@ export const ChatMessageTextWrapper = styled.div`
   display: flex;
   flex-direction: column;
   // border: 1px solid black;
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
   margin-bottom: 10px;
   flex-shrink: 0;
-  padding: 10px 15px;
+  padding: 10px 20px 10px 20px;
   word-break: break-all;
+  // opacity: 0.7;
   font-family: "Roboto", sans-serif;
 `;
 
@@ -61,13 +63,20 @@ export const ChatMessageRestaurantWrapper = styled.div`
   height: auto;
   display: flex;
   flex-direction: column;
-  margin: 2px;
+  margin-top: 5px;
   flex-shrink: 0;
+  border-radius: 10px;
+  box-shadow: ${(props) =>
+    props.selected ? "0px 0px 10px 0px rgba(0, 0, 0, 0.5)" : ""};
   :hover {
-    background-color: #e6e5eb;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
     transition: 0.5s;
   }
   // border: 1px solid black;
+  :active {
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 1);
+  }
 `;
 
 export const ChatMessageRestaurantTextWrapper = styled.div`
@@ -81,7 +90,9 @@ export const ChatMessageRestaurantTextWrapper = styled.div`
   padding: 5px;
   word-break: break-all;
   // background-color: #e6e5eb;
-  // border: 1px solid black;
+  font-weight: ${(props) => (props.role === "title" ? "bold" : "normal")};
+  font-size: ${(props) => (props.role === "title" ? "1.2rem" : "0.8rem")};
+  "font-weight: bold;"}// border: 1px solid black;
 `;
 
 export const ChatInputContainer = styled.div`
@@ -121,7 +132,8 @@ export const ChatInputButton = styled.div`
   align-items: center;
   background-color: #229954;
   &:hover {
-    background-color: #27ae60;
+    // background-color: #27ae60;
+    opacity: 0.8;
     color: white;
     transition: 0.5s;
   }
