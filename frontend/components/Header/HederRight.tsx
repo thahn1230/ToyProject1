@@ -9,7 +9,7 @@ import { Router, useRouter } from "next/router";
 
 const HeaderRight = () => {
   const profileModalRef = useRef<HTMLDivElement | null>(null);
-  const [showModal, setShowModal] = useState(false);
+  const [token, setToken] = useState<{} | null>(null);
   const handleLogout = () => {
     localStorage.removeItem("token");
     router.reload();
@@ -17,19 +17,9 @@ const HeaderRight = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const handleOutsideClick = (e: { target: any }) => {
-      if (showModal && !profileModalRef.current?.contains(e.target)) {
-        setShowModal(false);
-      }
-    };
-    document.addEventListener("click", handleOutsideClick);
-    return () => {
-      document.removeEventListener("click", handleOutsideClick);
-    };
-  }, [showModal]);
-
-  const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    const newToken = localStorage.getItem("token");
+    setToken(newToken);
+  }, [token]);
 
   return (
     <HeaderRightWrapper>

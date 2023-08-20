@@ -54,7 +54,7 @@ export default function Login() {
   const router = useRouter();
 
   const handleSignIn = async () => {
-    await fetch("http://10.221.71.119:8000" + "/login", {
+    await fetch("http://0.0.0.0:8000" + "/login", {
       method: "POST",
       headers: {
         Authorization: `Bearer `,
@@ -71,6 +71,7 @@ export default function Login() {
         return response.json();
       })
       .then((response) => {
+        console.log(response);
         if (response.status) {
           localStorage.setItem("token", response.token);
           localStorage.setItem("name", response.name);
@@ -86,7 +87,7 @@ export default function Login() {
     if (pwCheck === "") return alert("비밀번호를 다시 입력하세요");
     if (name === "") return alert("이름을 입력하세요");
     if (!isPwCheck) return alert("비밀번호가 일치하지 않습니다");
-    await fetch("http://10.221.71.119:8000" + "/sign_up", {
+    await fetch("http://0.0.0.0:8000" + "/sign_up", {
       method: "POST",
       headers: {
         Authorization: `Bearer `,
@@ -121,7 +122,7 @@ export default function Login() {
   return (
     <div
       style={{
-        width: "100vw",
+        width: "100%",
         height: "100vh",
         display: "flex",
         justifyContent: "center",
@@ -130,12 +131,36 @@ export default function Login() {
     >
       <LoginBox>
         <LoginHeader>
-          <LoginTitle active={isSignIn} onClick={handleIsSignIn}>
-            Sign In
-          </LoginTitle>
-          <LoginTitle active={!isSignIn} onClick={handleIsSignUp}>
-            Sign Up
-          </LoginTitle>
+          <div
+            style={{
+              width: "50%",
+              height: "70%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: "30px",
+              fontWeight: "bold",
+              fontFamily: "Roboto, sans-serif",
+              marginTop: "20px",
+            }}
+          >
+            Welcome
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "center",
+              width: "100%",
+            }}
+          >
+            <LoginTitle active={isSignIn} onClick={handleIsSignIn}>
+              Sign In
+            </LoginTitle>
+            <LoginTitle active={!isSignIn} onClick={handleIsSignUp}>
+              Sign Up
+            </LoginTitle>
+          </div>
         </LoginHeader>
         <LoginBody>
           <LoginInputWrapper>

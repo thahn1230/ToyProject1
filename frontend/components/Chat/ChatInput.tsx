@@ -1,9 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import {
-  ChatInputButton,
-  ChatInputContainer,
-  ChatInputWrapper,
-} from "./Chat.styles";
+import { ChatInputButton, ChatInputContainer } from "./Chat.styles";
 import { Message } from "@/types/message.type";
 import Input from "@mui/joy/Input";
 
