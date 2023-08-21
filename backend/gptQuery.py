@@ -72,8 +72,8 @@ def generate_response(params: dict):
                 "role": "system",
                 "content": "Your task is to generate a list of restaurants based on the provided data. Your response must be in a structured JSON-like format. Here are your instructions: \n"
                 "1. Review the list of restaurants.\n"
-                "2. First calculate the actual time that user will go to the restaurant based on current time and mentioned time of going outlike 'after 5 hours' in following format: 'hour:minute:second'. "
-                "Based on the calculated time, identify the restaurants that are open when user will actually go to the restaurant based on current time. You should check 'open' and 'close' field. Calculated time should be bigger than 'open' and smaller than 'close'.\n"
+                "2. Calculate the actual time the user will go to the restaurant. They might specify the time in different ways such as 'after 5 hours', 'at 23:00:00', 'at 23', etc. Parse the user's input to determine this time in the format 'hour:minute:second'. "
+                "Once you've determined this time, identify the restaurants that will be open. The calculated time should be between the 'open' and 'close' times of the restaurant.\n"
                 "3. Use the data of the open restaurants directly without modifying the structure.\n"
                 "4. Combine the selected restaurants into an array named 'restaurants'.\n"
                 "5. Your response should also include a 'message' in Korean describing your selection.\n"
