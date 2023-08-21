@@ -9,7 +9,12 @@ from selenium.common.exceptions import TimeoutException
 import requests
 import urllib.request
 import json
+
 from queryConfig import test_data
+from dbAccess import db_config
+import pymysql
+import datetime
+
 
 # for geocoding
 endpoint = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode"
@@ -64,68 +69,78 @@ while(True):
                 WebDriverWait(driver, 10).until(EC.element_to_be_clickable(restaurant)).click()
                 break  # Click successful, exit loop
             except TimeoutException:
-                print(f"Click attempt {retry_count + 1} failed. Retrying...")
+                # print(f"Click attempt {retry_count + 1} failed. Retrying...")
                 retry_count += 1
                 time.sleep(1)  # Delay before retrying
         
         if retry_count >= MAX_RETRIES:
-            print("Max retries reached. Skipping restaurant.")
-            continue
-
-        # time.sleep(1)
-        driver.switch_to.parent_frame()
-        entry_iframe_element = WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it((By.ID, 'entryIframe')))
-        # driver.switch_to.frame(entry_iframe_element)
-
-        name = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'Fc1rA'))).text
-        if(name == name_before):
+            ###
             driver.switch_to.default_content()
             WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it(search_iframe_element))
             continue
-        category = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'DJJvD'))).text
-        location = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'LDgIH'))).text
-        open_status = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'time'))).text
-        contact = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'xlx7Q'))).text
-
-        q=urllib.parse.quote_plus(location)
-        url = f"https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query={q}"
-        request = urllib.request.Request(url)
-        request.add_header("X-NCP-APIGW-API-KEY-ID", "c475psvaa6")
-        request.add_header("X-NCP-APIGW-API-KEY", "bSHA0bDTsrc8yNN1egy89UioehVLQptayQynVpWH")
-        res = json.loads(urllib.request.urlopen(request).read().decode("utf-8"))['addresses'][0]
-
-        name_before = name
-
-        new_restaurant = "{\n"
-        new_restaurant += ("name : " + name + '\n')
-        new_restaurant += ("category : " +category+ '\n')
-        new_restaurant += ("location : " +location+ '\n')
-        new_restaurant += ("last_order : " +open_status+ '\n')
-        new_restaurant += ("contact : " +contact+ '\n')
-        new_restaurant += ("coordinate : {" + "lon : " + res['x'] + ', ' + "lat : " + res['y'] + "}\n")
-        new_restaurant += "},\n"
 
 
-        new_test_data += new_restaurant
-        print(open_status)
-        # print(new_restaurant)
+        
+        try: 
+            driver.switch_to.parent_frame()
+            entry_iframe_element = WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it((By.ID, 'entryIframe')))
 
+            name = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'Fc1rA'))).text
+            if(name == name_before):
+                driver.switch_to.default_content()
+                WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it(search_iframe_element))
+                continue
+            category = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'DJJvD'))).text
+            location = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'LDgIH'))).text
 
-        # print("{")
-        # print("name : " + name)
-        # print("category : " +category)
-        # print("location : " +location)
-        # print("last_order : " +open_status)
-        # print("contact : " +contact)
-        # print("coordinate : {" + "lon : " + res['x'] + ', ' + "lat : " + res['y'] + "}")
-        # print("}, ")
+            # open status를 없애고 open close시간으로 바꿔야함
+            open_status = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, 'time'))).text
+            
+            time.sleep(1)
+            time_bar = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.CLASS_NAME, 'U7pYf')))
+            time_bar.click()
 
+            time_detail ="'"
+            days = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'i8cJw')))
+            open_close_time = WebDriverWait(driver, 10).until(EC.presence_of_all_elements_located((By.CLASS_NAME, 'H3ua4')))
+            for i, day in enumerate(days):
+                time_detail += day.text + ' '+ open_close_time[i].text +  "\n"
+            time_detail= time_detail[:-1]
 
+            contact = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'xlx7Q'))).text
 
-        driver.switch_to.default_content()
-        # WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it((By.ID, 'searchIframe')))
-        WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it(search_iframe_element))
-        # time.sleep(1)
+            q=urllib.parse.quote_plus(location)
+            url = f"https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query={q}"
+            request = urllib.request.Request(url)
+            request.add_header("X-NCP-APIGW-API-KEY-ID", "c475psvaa6")
+            request.add_header("X-NCP-APIGW-API-KEY", "bSHA0bDTsrc8yNN1egy89UioehVLQptayQynVpWH")
+            res = json.loads(urllib.request.urlopen(request).read().decode("utf-8"))['addresses'][0]
+
+            name_before = name
+
+            new_restaurant = "{\n"
+            new_restaurant += ("name : " + name + ',\n')
+            new_restaurant += ("category : " +category+ ',\n')
+            new_restaurant += ("location : " +location+ ',\n')
+            # new_restaurant += ("last_order : " +open_status+ '\n')
+            new_restaurant += ("time_detail : " +time_detail+ "',\n")
+            new_restaurant += ("contact : " +contact+ ',\n')
+            new_restaurant += ("coordinate : {" + "lon : " + res['x'] + ', ' + "lat : " + res['y'] + "}\n")
+            new_restaurant += "},\n"
+
+            print(new_restaurant)
+
+            new_test_data += new_restaurant
+
+            driver.switch_to.default_content()
+            WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it(search_iframe_element))
+        
+        except TimeoutException:
+            ###
+            driver.switch_to.default_content()
+            WebDriverWait(driver, 10).until(EC.frame_to_be_available_and_switch_to_it(search_iframe_element))
+            continue
+
 
 
     if(nextPage.get_attribute('aria-disabled') == "true"):
@@ -133,6 +148,7 @@ while(True):
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable(nextPage)).click()
     # nextPage.click()
     time.sleep(1)
+
 
 
 with open("queryConfig.py","r", encoding="utf-8") as configFile:

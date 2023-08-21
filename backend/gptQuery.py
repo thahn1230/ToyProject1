@@ -6,12 +6,16 @@ import openai
 import os
 import requests
 from queryConfig import GPT_API_KEY
-from queryConfig import test_data
 from datetime import datetime
 
 import json
 
+from dbAccess import create_db_connection
+import pandas
+
 GPT_Router = APIRouter()
+engine = create_db_connection()
+connection = engine.connect()
 
 openai.api_key = GPT_API_KEY
 
@@ -21,41 +25,85 @@ def read_root():
     return {"message": "Hello World!"}
 
 
+def fetch_data_from_db():
+
+    query = """
+        SELECT 
+            name,
+            category,
+            location,
+            open,
+            close,
+            contact,
+            ST_X(coordinate) as longitude,
+            ST_Y(coordinate) as latitude
+        FROM db.restaurants
+    """
+
+    restaurants_df = pandas.read_sql(query, engine)
+
+    # Convert 'open' and 'close' columns from Timedelta to string
+    restaurants_df['open'] = restaurants_df['open'].astype(str).str.split().str[-1]
+    restaurants_df['close'] = restaurants_df['close'].astype(str).str.split().str[-1]
+
+
+    # Convert the longitude and latitude to a coordinate dictionary
+    restaurants_df['coordinate'] = restaurants_df.apply(lambda row: {'longitude': row['longitude'], 'latitude': row['latitude']}, axis=1)
+
+    # Drop the separate longitude and latitude columns
+    restaurants_df.drop(columns=['longitude', 'latitude'], inplace=True)
+
+    # Convert DataFrame to a dictionary
+    restaurants_dict = restaurants_df.to_dict(orient="records")
+
+    # Convert dictionary to a JSON string
+    restaurants_str = json.dumps(restaurants_dict, ensure_ascii=False)
+
+    print(restaurants_str)
+    return restaurants_str
+
+
 @GPT_Router.post("/query")
 def generate_response(params: dict):
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-3.5-turbo-16k",
         messages=[
             {
                 "role": "system",
-                "content": "Please respond in the specified format: {message: string, restaurants: [{name: string, category: string, coordinate: {latitude: number, longitude: number}, location: string, last_order: string, contact: string}]}."
-                + "Ensure your response is in Korean."
-                + "You will receive a list of restaurants, and you should select objects from them."
-                + "If there is no relevant data, leave the restaurants[] empty."
+                "content": "Your task is to generate a list of restaurants based on the provided data. Your response must be in a structured JSON-like format. Here are your instructions: \n"
+                "1. Review the list of restaurants.\n"
+                "2. First calculate the actual time that user will go to the restaurant based on current time and mentioned time of going outlike 'after 5 hours' in following format: 'hour:minute:second'. "
+                "Based on the calculated time, identify the restaurants that are open when user will actually go to the restaurant based on current time. You should check 'open' and 'close' field. Calculated time should be bigger than 'open' and smaller than 'close'.\n"
+                "3. Use the data of the open restaurants directly without modifying the structure.\n"
+                "4. Combine the selected restaurants into an array named 'restaurants'.\n"
+                "5. Your response should also include a 'message' in Korean describing your selection.\n"
+                "6. Your final response should be only: {message: 'your_message', restaurants: [selected_restaurants_list]}. Please ensure the data is in a structured, JSON-like format."
             },
-            {"role": "system",
-                "content": "The list of available data is as follows: " + test_data},
             {
                 "role": "system",
-                "content": "The current time is: "
-                + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                + " Your response should only include currently open restaurants from the given list.",
+                "content": "Here's the list of available data: " + fetch_data_from_db()
             },
-            {"role": "user", "content": params["message"]},
+            {
+                "role": "system",
+                "content": "The current time(hour:minute:second) now is: " + datetime.now().strftime("%H:%M:%S")
+            },
+            {
+                "role": "user",
+                "content": params["message"]
+            },
         ],
         temperature=0,
-
-
     )
 
+
     # Print the generated response
-    answer = json.loads(response.choices[0].message["content"])
-    print(answer["message"])
-    return {"answer": response.choices[0].message["content"]}
+    answer =response.choices[0].message["content"]
+    print(answer)
+    return {"answer": answer}
 
 
 # Everything below stands for testing. Ignore them.
-@GPT_Router.get("/query/test/1")
+@GPT_Router.get("/test/query/1")
 def test_response():
     print("hi")
     response = openai.ChatCompletion.create(
@@ -85,7 +133,8 @@ def test_response():
     print(response.choices[0].message["content"])
     return response.choices[0].message["content"]
 
-@GPT_Router.get("/query/test/2")
+
+@GPT_Router.get("/test/query/2")
 def test_response():
     response = openai.ChatCompletion.create(
         model="gpt-4",
@@ -110,3 +159,9 @@ def test_response():
     # Print the generated response
     print(response.choices[0].message["content"])
     return response.choices[0].message["content"]
+
+
+@GPT_Router.get("/test/function")
+def test_function():
+    fetch_data_from_db()
+    return
