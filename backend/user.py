@@ -19,38 +19,30 @@ UserRouter = APIRouter()
 engine = create_db_connection()
 connection = engine.connect()
 
-
 class Token(BaseModel):
     user_id: str
 
-
 # Endpoint to retrieve reviews for a specific user
 @UserRouter.get("/user/reviews")
-def get_user_reviews(params: dict, user_id: str = Header(None)):
-    restaurant_name = params["restaurant_name"]
-    rating = params["rating"]
-    description = params["description"]
+def get_user_reviews(Authorization: str =  Header(None)): 
+    user_id = Authorization.split(" ")[1]
 
-    try:
-        with Session(engine) as session:
-            session.execute(
-                text(
-                    """
-                    INSERT INTO reviews (user_id, restaurant_name, rating, description)
-                    VALUES (:user_id, :restaurant_name, :rating, :description);
-                """
-                ),
-                {
-                    "user_id": user_id,
-                    "restaurant_name": restaurant_name,
-                    "rating": rating,
-                    "description": description,
-                },
-            )
+    query = f"""
+        SELECT *
+        FROM db.revies
+        WHERE id = "{user_id}";
+    """
 
-            session.commit()
-            return True
-    except Exception as e:
-        print("An error occurred: ", e)
-        session.rollback()
-        return False
+    reviews_df = pd.read_sql(query, engine)
+    print(reviews_df)
+    return 0
+
+@UserRouter.get("/get_restaurants_name")
+def get_restaurants_name():
+    query = """
+        SELECT name FROM db.restaurants;
+    """
+
+    restaurants_name_df = pd.read_sql(query, engine)
+
+    return JSONResponse(restaurants_name_df.to_json(force_ascii=False, orient="records"))
