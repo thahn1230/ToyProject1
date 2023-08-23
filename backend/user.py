@@ -37,6 +37,15 @@ def get_user_reviews(Authorization: str =  Header(None)):
     print(reviews_df)
     return 0
 
+@UserRouter.get("/get_restaurants_name")
+def get_restaurants_name():
+    query = """
+        SELECT name FROM db.restaurants;
+    """
+
+    restaurants_name_df = pd.read_sql(query, engine)
+
+    return JSONResponse(restaurants_name_df.to_json(force_ascii=False, orient="records"))
 
 # not yet updated
 # @router.get("/user/profile")

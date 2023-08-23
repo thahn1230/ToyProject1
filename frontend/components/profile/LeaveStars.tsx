@@ -5,7 +5,7 @@ type RatingProps = {
     onChange?: (rating: number) => void;
   };
 
-const LeaveReview = ({ initialRating = 0, onChange }:RatingProps) => {
+const LeaveStars = ({ initialRating = 0, onChange }:RatingProps) => {
     const [rating, setRating] = useState(initialRating);
     const [hoverRating, setHoverRating]= useState(initialRating);
 
@@ -42,4 +42,4 @@ const LeaveReview = ({ initialRating = 0, onChange }:RatingProps) => {
     );
   };
   
-export default LeaveReview;
+export default LeaveStars;

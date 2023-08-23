@@ -21,7 +21,7 @@ const StyledDropdownButton = styled.select`
   font-size: 13px;
 `;
 
-import LeaveReview from "@/components/profile/LeaveReview";
+import LeaveStars from "@/components/profile/LeaveStars";
 // import "@/styles/LeaveReview.css"
 
 export default function ProfilePage() {
@@ -41,7 +41,7 @@ export default function ProfilePage() {
   }, []);
 
   const fetchRestaurantList = () => {
-    fetch("http://localhost:8000" + "/login", {
+    fetch("http://localhost:8000" + "/get_restaurants_name", {
       method: "GET",
       headers: {
         Authorization: `Bearer `,
@@ -55,8 +55,10 @@ export default function ProfilePage() {
         return response.json();
       })
       .then((response) => {
-console.log(response)
+        const namelist = JSON.parse(response).map((item: any) => item.name);
+        console.log(namelist);
 
+        setOptions(namelist);
       })
       .catch((error) => console.error("Error:", error));
   };
@@ -138,6 +140,7 @@ console.log(response)
                   </StyledDropdownButton>
                 </div>
 
+                <LeaveStars></LeaveStars>
                 <ReviewWriteContainer>
                   <div style={{ flex: "1 1 auto", overflow: "hidden" }}>
                     <textarea
