@@ -26,8 +26,8 @@ export const ProfileBodyHeader = styled.div`
 export const ProfileBodyHeaderTitle = styled.div``;
 
 export const ProfileBodyContent = styled.div`
-  width: 90%;
-  height: 65%;
+  width: 100%;
+  height: 90vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -39,7 +39,7 @@ export const ProfileBodyContentTitle = styled.div``;
 
 export const ReviewContainer = styled.div`
   width: 90%;
-  height: 80%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: center;
