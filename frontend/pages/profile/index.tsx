@@ -24,8 +24,19 @@ const StyledDropdownButton = styled.select`
 import LeaveStars from "@/components/profile/LeaveStars";
 // import "@/styles/LeaveReview.css"
 
+interface reviewI {
+  restaurant_name: string;
+  rating: number;
+  description: string;
+}
+
 export default function ProfilePage() {
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState<reviewI[]>([]);
+  const [reviewList, setReviewList] = useState<JSX.Element[]>([
+    <div key={0}>Loading...</div>,
+  ]);
+  const [writtenReview, setWrittenReview] = useState<reviewI>();
+
   const [userName, setUserName] = useState("");
   const [currentReview, setCurrentReview] = useState("");
 
@@ -35,6 +46,25 @@ export default function ProfilePage() {
   const { mutate } = useSWRConfig();
 
   const [rating, setRating] = useState(0);
+
+  useEffect(() => {
+    console.log(writtenReview);
+  }, [writtenReview]);
+
+  useEffect(() => {
+    const writtenReview = reviews.find(
+      (item) => item.restaurant_name === dropdownValue1
+    );
+    console.log(writtenReview);
+    setWrittenReview(writtenReview);
+    if (writtenReview !== undefined) {
+      setCurrentReview(writtenReview.description);
+      setRating(writtenReview.rating);
+    } else {
+      setCurrentReview("");
+      setRating(0);
+    }
+  }, [dropdownValue1]);
 
   useEffect(() => {
     getReviews();
@@ -58,9 +88,9 @@ export default function ProfilePage() {
       })
       .then((response) => {
         const namelist = JSON.parse(response).map((item: any) => item.name);
-        console.log(namelist);
 
         setOptions(namelist);
+        setDropdownValue1(namelist[0]);
       })
       .catch((error) => console.error("Error:", error));
   };
@@ -71,35 +101,107 @@ export default function ProfilePage() {
     setUserName(storedUserName);
   };
 
-  const getReviews = () => {
-    fetch("/reviews.json")
-      .then((response) => response.json())
-      .then((data) => {
-        setReviews(data.reviews);
-      })
-      .catch((error) => console.error("Error:", error));
+  const renderStar = (index: number, rating: number) => {
+    let starClass = "star";
+
+    if (rating >= index) {
+      starClass += " filled";
+    } else if (rating > index - 1) {
+      starClass += " half-filled";
+    }
+
+    return <div key={index} className={starClass}></div>;
   };
 
-  const writeReviewToFile = (data) => {
-    const newReview = { description: data.description };
-    const updatedReviews = [...reviews, newReview];
 
-    fetch("/reviews.json", {
-      method: "POST",
+
+  useEffect(()=>{
+    setReviewList(
+      reviews.map((review: reviewI, index: number) => (
+        <div key={index} style={{}}>
+          <div style={{ display: "flex" }}>
+            <div style={{ marginRight: "10px" }}>
+              {review.restaurant_name}{" "}
+            </div>
+            <div style={{ display: "flex" }}>
+              {[1, 2, 3, 4, 5].map((index) =>
+                renderStar(index, review.rating)
+              )}{" "}
+            </div>
+          </div>
+          <div>{review.description} </div>
+          <div>---</div>
+        </div>
+      ))
+    );
+  },[reviews])
+
+  const getReviews = () => {
+    fetch("http://localhost:8000/user/reviews", {
+      method: "GET",
       headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // 유저 아이디에 따라 수정
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ reviews: updatedReviews }),
     })
-      .then(() => {
-        setReviews(updatedReviews);
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((userReviews) => {
+        setReviews(JSON.parse(userReviews));
       })
       .catch((error) => console.error("Error:", error));
   };
 
-  const onStarChange= (newRating:number)=>{
-    setRating(newRating)
-  }
+  const writeReviewToFile = () => {
+    if (currentReview.trim() === "") {
+      window.alert("리뷰를 작성해주세요!");
+      return;
+    } else if (dropdownValue1 === "") {
+      window.alert("레스토랑을 선택해주세요!");
+      return;
+    }
+
+    const newReview = {
+      restaurant_name: dropdownValue1,
+      rating: rating,
+      description: currentReview,
+    };
+
+    fetch("http://localhost:8000/user/new_review", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`, // 유저 아이디에 따라 수정
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        review_info: {
+          restaurant_name: dropdownValue1,
+          rating: rating,
+          description: currentReview,
+        },
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then(() => {
+        const updatedReviews: reviewI[] = [...reviews, newReview];
+        setReviews(updatedReviews);
+        setCurrentReview(""); // 작성 후 칸 비우기
+      })
+      .catch((error) => console.error("Error:", error));
+  };
+
+  const onStarChange = (newRating: number) => {
+    setRating(newRating);
+  };
 
   const handleDropdownChange1 = (e) => {
     setDropdownValue1(e.target.value);
@@ -146,7 +248,17 @@ export default function ProfilePage() {
                   </StyledDropdownButton>
                 </div>
 
-                <LeaveStars initialRating = {0} onChange = {onStarChange} ></LeaveStars>
+                {writtenReview !== undefined ? (
+                  <LeaveStars
+                    initialRating={rating}
+                    onChange={onStarChange}
+                  ></LeaveStars>
+                ) : (
+                  <LeaveStars
+                    initialRating={0}
+                    onChange={onStarChange}
+                  ></LeaveStars>
+                )}
 
                 <ReviewWriteContainer>
                   <div style={{ flex: "1 1 auto", overflow: "hidden" }}>
@@ -167,8 +279,11 @@ export default function ProfilePage() {
                     onClick={() => {
                       if (currentReview.trim() === "") {
                         window.alert("리뷰를 작성해주세요!");
-                      } else {
-                        writeReviewToFile({ description: currentReview });
+                      } else if(rating ===0){
+                        window.alert("별점을 매겨주세요!");
+                      }
+                      else {
+                        writeReviewToFile();
                         setCurrentReview(""); // 작성 후 칸 비우기
                       }
                     }}
@@ -179,11 +294,7 @@ export default function ProfilePage() {
               </div>
               <div style={{ flex: 1, overflow: "auto", paddingLeft: "16px" }}>
                 <h3>작성한 리뷰 목록</h3>
-                <div>
-                  {reviews.map((review, index) => (
-                    <div key={index}>{review.description}</div>
-                  ))}
-                </div>
+                <div>{reviewList}</div>
               </div>
             </div>
           </ReviewContainer>

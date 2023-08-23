@@ -82,7 +82,7 @@ function useMap(
               <div class="iw_category iw_header_content">${restaurant.category}</div>
             </div>
               <p>${restaurant.location}</p>
-              <p>Last Order: ${restaurant.last_order}</p>
+              <p>Close at: ${restaurant.close}</p>
               <p>Contact: ${restaurant.contact}</p>
           </div>
         `;

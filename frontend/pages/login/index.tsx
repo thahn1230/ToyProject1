@@ -54,7 +54,7 @@ export default function Login() {
   const router = useRouter();
 
   const handleSignIn = async () => {
-    await fetch("http://192.168.0.49:8000" + "/login", {
+    await fetch("http://localhost:8000" + "/login", {
       method: "POST",
       headers: {
         Authorization: `Bearer `,
