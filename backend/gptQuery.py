@@ -26,7 +26,6 @@ def read_root():
 
 
 def fetch_data_from_db():
-
     query = """
         SELECT 
             name,
@@ -43,15 +42,16 @@ def fetch_data_from_db():
     restaurants_df = pandas.read_sql(query, engine)
 
     # Convert 'open' and 'close' columns from Timedelta to string
-    restaurants_df['open'] = restaurants_df['open'].astype(str).str.split().str[-1]
-    restaurants_df['close'] = restaurants_df['close'].astype(str).str.split().str[-1]
-
+    restaurants_df["open"] = restaurants_df["open"].astype(str).str.split().str[-1]
+    restaurants_df["close"] = restaurants_df["close"].astype(str).str.split().str[-1]
 
     # Convert the longitude and latitude to a coordinate dictionary
-    restaurants_df['coordinate'] = restaurants_df.apply(lambda row: {'longitude': row['longitude'], 'latitude': row['latitude']}, axis=1)
+    restaurants_df["coordinate"] = restaurants_df.apply(
+        lambda row: {"longitude": row["longitude"], "latitude": row["latitude"]}, axis=1
+    )
 
     # Drop the separate longitude and latitude columns
-    restaurants_df.drop(columns=['longitude', 'latitude'], inplace=True)
+    restaurants_df.drop(columns=["longitude", "latitude"], inplace=True)
 
     # Convert DataFrame to a dictionary
     restaurants_dict = restaurants_df.to_dict(orient="records")
@@ -69,34 +69,41 @@ def generate_response(params: dict):
         messages=[
             {
                 "role": "system",
-                "content": "Your task is to generate a list of restaurants based on the provided data and return it in a structured JSON format. Follow these steps:\n"
-                "1. Review the list of restaurants.\n"
-                "2. Determine the actual time the user plans to visit the restaurant based on their input. Inputs might be like '5시간 뒤에', '밤 11시', '23시', etc. Convert this to 'hour:minute:second' format. "
-                "Given the current time is " + datetime.now().strftime("%H:%M:%S") + ", calculate the user's intended visit time.\n"
-                "For example, if the current time is 15:30:00 and if user said that he will visit after 3 hours, intended visit time is 18:30:00.\n"
-                "For example, if the current time is 15:30:00 and if user said that he will visit after 30 minutes, intended visit time is 16:00:00.\n"
-                "3. Select the restaurants open at the intended visit time. Ensure the calculated time falls between the 'open' and 'close' times of the restaurant.\n"
-                "When determining if the calculated time falls between 'open' and 'close' time, consider the hours first and if they have same hour, consider minutes. If the minute is also the same, consider it as 'do not fall'.\n"
-                "4. Combine the selected restaurants into an array named 'restaurants'.\n"
-                "5. Include a 'message' in Korean summarizing your selection.\n"
-                "6. Your final response format should be: {message: 'your_message', restaurants: [selected_restaurants_list]}. This is the most important.\n"
+                "content": "Here's the list of available data: " + fetch_data_from_db(),
             },
             {
                 "role": "system",
-                "content": "Here's the list of available data: " + fetch_data_from_db()
+                "content": "The current time(hh:mm:ss) now is: "
+                + datetime.now().strftime("%H:%M:%S"),
             },
             {
-                "role": "user",
-                "content": params["message"]
+                "role": "system",
+                "content": "Here's the description of the provided data.\n"
+                "The provided data is the database of the restaurants with some information in it. This DBMS is using MySQL.\n"
+                "In this database, There are 3 tables, 'restaurants', 'reviews', 'user_information'",
             },
+            {
+                "role": "system",
+                "content": "Your task is to generate a list of restaurants based on the provided data. Your response must be in a structured JSON-like format. Here are your instructions: \n"
+                "1. Review the list of restaurants.\n"
+                "2. Calculate the actual time the user will go to the restaurant. They might specify the time in different ways such as 'after 5 hours', 'at 23:00:00', 'at 23', etc. Parse the user's input to determine this time in the format 'hh:mm:ss'.\n"
+                "Once you've determined this time, consider it with restaurants' 'open' and 'close' time. The calculated time should be between the 'open' and 'close' times of the restaurant.\n"
+                "3. Use the data of the open restaurants directly without modifying the structure.\n"
+                "4. Combine the selected restaurants into an array named 'restaurants'.\n"
+                "5. Your response should also include a 'message' in Korean describing your selection.\n"
+                "6. Your final response should be only: {message: 'your_message', restaurants: [selected_restaurants_list]}. Please ensure the data is in a structured, JSON-like format.\n"
+                "7. Once again, you must consider and calculate the time that user said. If the calculated time that user said is later than the 'close' time of the restaurant, then that restaurant is not valid and must not be shown or suggested.\n"
+                "for example, if user said he will go to the restaurants after 5 hours at 18:00:00, that means that he will arrive at the restaurants at 23:00:00. So the calculated timeis 23:00:00.\n"
+                "The name '양미옥' restaurants' 'close' time is 20:40:00. It's after the calculated time which is 23:00:00. Then the '양미옥' restaurant is invalid, so it must not be suggested and shown to user.",
+            },
+            {"role": "user", "content": params["message"]},
         ],
 
         temperature=0,
     )
 
-
     # Print the generated response
-    answer =response.choices[0].message["content"]
+    answer = response.choices[0].message["content"]
     print(answer)
     return {"answer": answer}
 
@@ -114,7 +121,7 @@ def test_response():
                 + "And content of message must be korean."
                 + "In the restaurants array, there should be objects in list below."
                 + "In the restaurants array, ther should be additional information, which is the coordinate of the restaurant. You have to convert location into coordinate. "
-                + "Your restaurants[] must be part of List of data below. restaurants[] can be an empty array. "
+                + "Your restaurants[] must be part of List of data below. restaurants[] can be an empty array. ",
             },
             {"role": "system", "content": "List of data is as follows : " + test_data},
             {
@@ -141,7 +148,7 @@ def test_response():
             {
                 "role": "system",
                 "content": "for every object in the restaurants list, you have to check if the restaurant is open or not"
-                + ""
+                + "",
             },
             {"role": "system", "content": "List of data is as follows : " + test_data},
             {
