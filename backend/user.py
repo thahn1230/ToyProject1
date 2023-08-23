@@ -55,6 +55,17 @@ def get_user_reviews(params: dict, user_id: str = Header(None)):
         session.rollback()
         return False
 
+
+@UserRouter.get("/get_restaurants_name")
+def get_restaurants_name():
+    query = """
+        SELECT name FROM db.restaurants 
+    """
+
+    name_data = pd.read_sql(query, engine)
+
+    return JSONResponse(name_data.to_json(force_ascii=False, orient="records"))
+
     # not yet updated
     # @router.get("/user/profile")
     # def get_user_info(token: TokenData = Depends(verify_user)):
