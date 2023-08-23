@@ -11,6 +11,15 @@ import {
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import { useSWRConfig } from "swr";
+import styled from "styled-components";
+
+const StyledDropdownButton = styled.select`
+  padding: 2.5px;
+  border: 1px solid #ccc;
+  border-radius: 5px; /* 테두리를 둥글게 만듭니다 */
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1); /* 미세한 그림자 추가 */
+  font-size: 13px;
+`;
 
 import LeaveReview from "@/components/profile/LeaveReview";
 // import "@/styles/LeaveReview.css"
@@ -20,9 +29,16 @@ export default function ProfilePage() {
   const [reviews, setReviews] = useState([]);
   const [userName, setUserName] = useState("");
   const [currentReview, setCurrentReview] = useState("");
-  const [dropdownValue1, setDropdownValue1] = useState("옵션 1");
-  const [dropdownValue2, setDropdownValue2] = useState("옵션 1");
+  const [dropdownValue1, setDropdownValue1] = useState("");
+  const [dropdownValue2, setDropdownValue2] = useState("");
   const { mutate } = useSWRConfig();
+
+  const options = [
+    "옵션 1",
+    "옵션 2",
+    "옵션 3",
+    // ... 더 많은 옵션들
+  ];
 
   useEffect(() => {
     getReviews();
@@ -85,11 +101,11 @@ export default function ProfilePage() {
             <div style={{ display: 'flex', width: '100%', height: '100vh' }}>
               <div style={{ flex: 1, paddingLeft: '8px', paddingBottom: '8px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                 <div>
-                  <select value={dropdownValue1} onChange={handleDropdownChange1}>
-                    <option value="옵션 1">옵션 1</option>
-                    <option value="옵션 2">옵션 2</option>
-                    <option value="옵션 3">옵션 3</option>
-                  </select>
+                  <StyledDropdownButton value={dropdownValue1} onChange={handleDropdownChange1}>
+                    {options.map((option, index) => (
+                      <option key={index} value={option}>{option}</option>
+                    ))}
+                  </StyledDropdownButton>
                 </div>
                 
                 <ReviewWriteContainer>
