@@ -9,22 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chatscope/chat-ui-kit-react": "^1.10.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@mui/joy": "^5.0.0-beta.1",
+    "@mui/material": "^5.14.4",
     "@types/node": "20.4.9",
     "@types/react": "18.2.19",
     "@types/react-dom": "18.2.7",
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.13",
     "next": "^13.4.13",
-<<<<<<< HEAD
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.10.1",
+    "react-router-dom": "^6.15.0",
     "styled-components": "^6.0.7",
-=======
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
->>>>>>> c4478cd0858d41b3370a90bf4a4c9f6f8c9edea8
+    "swr": "^2.2.1",
     "typescript": "5.1.6"
   },
   "devDependencies": {

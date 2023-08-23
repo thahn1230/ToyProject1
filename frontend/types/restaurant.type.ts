@@ -1,5 +1,8 @@
 export interface RestaurantType {
   name: string;
+  category: string;
   coordinate: { latitude: number; longitude: number };
-  content: any;
+  location: string;
+  last_order: string;
+  contact: string;
 }

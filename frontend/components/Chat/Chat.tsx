@@ -1,24 +1,28 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Message } from "@/types/message.type";
-import { ChatMessage, ChatMessages } from "./Chat.styles";
+import { ChatMessageWrapper, ChatMessages } from "./Chat.styles";
 import ChatInput from "./ChatInput";
 import { RestaurantType } from "@/types/restaurant.type";
+import ChatMessage from "./ChatMessage";
 
 const ChatBox = ({
   setData,
+  setRestaurant,
 }: {
+  data: RestaurantType[];
   setData: Dispatch<SetStateAction<RestaurantType[]>>;
+  setRestaurant: Dispatch<SetStateAction<RestaurantType | null>>;
 }) => {
   const [messages, setMessages] = useState<Array<Message>>([]);
 
   useEffect(() => {
     if (messages.length > 0 && messages[0].isUser) {
-      PostMessage(messages[0].content);
+      PostMessage(messages[0].message);
     }
   }, [messages]);
 
   const PostMessage = (message: string) => {
-    fetch("http://localhost:8001/test/query", {
+    fetch("http://localhost:8000/query", {
       method: "POST",
       headers: {
         Authorization: `Bearer`,
@@ -35,14 +39,16 @@ const ChatBox = ({
         return response.json();
       })
       .then((response) => {
-        setMessages([{ isUser: false, content: response.answer }, ...messages]);
-        setData([
+        setMessages([
           {
-            name: "test",
-            coordinate: { latitude: 0, longitude: 0 },
-            content: null,
+            isUser: false,
+            message: JSON.parse(response.answer).message,
+            restaurants: JSON.parse(response.answer).restaurants,
           },
+          ...messages,
         ]);
+
+        setData(JSON.parse(response.answer).restaurants);
         // setData(JSON.parse());
       })
       .catch((error) => console.error("Error:", error));
@@ -58,13 +64,9 @@ const ChatBox = ({
           return (
             <ChatMessage
               key={index}
-              className="message"
-              style={{
-                justifyContent: message.isUser ? "flex-end" : "flex-start",
-              }}
-            >
-              {message.content}
-            </ChatMessage>
+              message={message}
+              setRestaurant={setRestaurant}
+            ></ChatMessage>
           );
         })}
       </ChatMessages>
