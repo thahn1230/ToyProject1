@@ -34,6 +34,8 @@ export default function ProfilePage() {
   const [dropdownValue2, setDropdownValue2] = useState("");
   const { mutate } = useSWRConfig();
 
+  const [rating, setRating] = useState(0);
+
   useEffect(() => {
     getReviews();
     fetchUserName();
@@ -95,6 +97,10 @@ export default function ProfilePage() {
       .catch((error) => console.error("Error:", error));
   };
 
+  const onStarChange= (newRating:number)=>{
+    setRating(newRating)
+  }
+
   const handleDropdownChange1 = (e) => {
     setDropdownValue1(e.target.value);
   };
@@ -140,7 +146,8 @@ export default function ProfilePage() {
                   </StyledDropdownButton>
                 </div>
 
-                <LeaveStars></LeaveStars>
+                <LeaveStars initialRating = {0} onChange = {onStarChange} ></LeaveStars>
+
                 <ReviewWriteContainer>
                   <div style={{ flex: "1 1 auto", overflow: "hidden" }}>
                     <textarea
