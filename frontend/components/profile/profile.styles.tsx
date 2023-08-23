@@ -38,11 +38,18 @@ export const ProfileBodyContent = styled.div`
 export const ProfileBodyContentTitle = styled.div``;
 
 export const ReviewContainer = styled.div`
-  width: 90%;
+  width: 95%;
   height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   border: 1px solid black;
+`;
+
+export const ReviewWriteContainer = styled.div`
+  width: 100%;
+  height: 95%;
+  display: flex;
+  flex-direction: column;
 `;

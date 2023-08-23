@@ -6,6 +6,7 @@ import {
   ProfileBodyContent,
   ProfileBodyHeader,
   ReviewContainer,
+  ReviewWriteContainer,
 } from "@/components/profile/profile.styles";
 import Head from "next/head";
 import { useState, useEffect } from "react";
@@ -15,6 +16,8 @@ export default function ProfilePage() {
   const [reviews, setReviews] = useState([]);
   const [userName, setUserName] = useState("");
   const [currentReview, setCurrentReview] = useState("");
+  const [dropdownValue1, setDropdownValue1] = useState("옵션 1");
+  const [dropdownValue2, setDropdownValue2] = useState("옵션 1");
   const { mutate } = useSWRConfig();
 
   useEffect(() => {
@@ -23,16 +26,12 @@ export default function ProfilePage() {
   }, []);
 
   const fetchUserName = () => {
-    // 유저 이름을 가져오는 로직 추가
-    // 예시로 localStorage에서 가져오는 것으로 가정
     const storedUserName = localStorage.getItem("name");
-    
     setUserName(storedUserName);
   };
 
   const getReviews = () => {
-    // 리뷰 데이터를 JSON 파일로부터 가져오는 로직 추가
-    fetch("/reviews.json") // reviews.json 파일의 경로에 맞게 수정
+    fetch("/reviews.json")
       .then((response) => response.json())
       .then((data) => {
         setReviews(data.reviews);
@@ -41,7 +40,6 @@ export default function ProfilePage() {
   };
 
   const writeReviewToFile = (data) => {
-    // 새 리뷰를 JSON 파일에 추가하는 로직 추가
     const newReview = { description: data.description };
     const updatedReviews = [...reviews, newReview];
 
@@ -53,10 +51,17 @@ export default function ProfilePage() {
       body: JSON.stringify({ reviews: updatedReviews }),
     })
       .then(() => {
-        // 리뷰 추가 후 리뷰 목록 업데이트
         setReviews(updatedReviews);
       })
       .catch((error) => console.error("Error:", error));
+  };
+
+  const handleDropdownChange1 = (e) => {
+    setDropdownValue1(e.target.value);
+  };
+
+  const handleDropdownChange2 = (e) => {
+    setDropdownValue2(e.target.value);
   };
 
   return (
@@ -64,7 +69,7 @@ export default function ProfilePage() {
       <Head>
         <title>프로필</title>
       </Head>
-  
+    
       <HomeHeader>
         <HeaderLeft />
         <HeaderRight />
@@ -72,36 +77,50 @@ export default function ProfilePage() {
       <ProfileBody>
         <ProfileBodyContent>
           <ReviewContainer>
-            <div style={{ display: 'flex', width: '100%' , height: '100vh'}}>
-              <div style={{ flex: 1, width: '100%'}}>
-                <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-                  <textarea
-                    style={{ width: '100%', flex: 1 }}
-                    rows={5}
-                    value={currentReview}
-                    onChange={(e) => setCurrentReview(e.target.value)}
-                  />
+
+            <div style={{ display: 'flex', width: '100%', height: '100vh' }}>
+              <div style={{ flex: 1, paddingLeft: '8px', paddingBottom: '8px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                <div>
+                  <select value={dropdownValue1} onChange={handleDropdownChange1}>
+                    <option value="옵션 1">옵션 1</option>
+                    <option value="옵션 2">옵션 2</option>
+                    <option value="옵션 3">옵션 3</option>
+                  </select>
+                </div>
+                
+                <ReviewWriteContainer>
+                  <div style={{ flex: '1 1 auto', overflow: 'hidden' }}>
+                    <textarea
+                      style={{ width: '100%', height: '100%', resize: 'none', border: '1px solid #ccc', padding: '8px' }}
+                      value={currentReview}
+                      onChange={(e) => setCurrentReview(e.target.value)}
+                    />
+                  </div>
                   <button
-                    style={{ alignSelf: 'flex-end' }}
+                    style={{ alignSelf: 'flex-end', marginTop: '8px' }}
                     onClick={() => {
-                      writeReviewToFile({ description: currentReview });
-                      setCurrentReview(""); // 작성 후 칸 비우기
+                      if (currentReview.trim() === "") {
+                        window.alert("리뷰를 작성해주세요!");
+                      } else {
+                        writeReviewToFile({ description: currentReview });
+                        setCurrentReview(""); // 작성 후 칸 비우기
+                      }
                     }}
                   >
                     리뷰 작성
                   </button>
+                </ReviewWriteContainer>
+              </div>
+              <div style={{ flex: 1, overflow: 'auto', paddingLeft: '16px' }}>
+                <h3>작성한 리뷰 목록</h3>
+                <div>
+                  {reviews.map((review, index) => (
+                    <div key={index}>{review.description}</div>
+                  ))}
                 </div>
               </div>
-              <div style={{ flex: 1 }}>
-                <h3>작성한 리뷰 목록</h3>
-                <ul>
-                  {reviews.map((review, index) => (
-                    <li key={index}>{review.description}</li>
-                  ))}
-                </ul>
-              </div>
             </div>
-            </ReviewContainer>
+          </ReviewContainer>
         </ProfileBodyContent>
       </ProfileBody>
     </>
