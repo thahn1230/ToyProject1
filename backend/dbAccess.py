@@ -5,8 +5,9 @@ db_config = {
     "port": 3306,
     "user": "admin",
     "password": "asdfasdf",
-    "database": "",
+    "database": "db",
 }
+
 
 # toyProj DB에 연결
 def create_db_connection():
@@ -17,12 +18,13 @@ def create_db_connection():
     try:
         connection = engine.connect()
         if connection:
-          print(f"Successfully connected to database {db_name}")
-          return engine
+            print(f"Successfully connected to database {db_name}")
+            return engine
         else:
-          print("Failed to create connection")
-          exit()
+            print("Failed to create connection")
+            exit()
     except Exception as e:
-        print(f"An error occurred when trying to connect to database {db_name}: {str(e)}")
+        print(
+            f"An error occurred when trying to connect to database {db_name}: {str(e)}"
+        )
         exit()
-
