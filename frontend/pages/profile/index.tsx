@@ -7,6 +7,8 @@ import {
   ProfileBodyHeader,
   ReviewContainer,
   ReviewWriteContainer,
+  ReviewBox,
+  FixedHeightReview,
 } from "@/components/profile/profile.styles";
 import Head from "next/head";
 import { useState, useEffect } from "react";
@@ -22,6 +24,7 @@ const StyledDropdownButton = styled.select`
 `;
 
 import LeaveStars from "@/components/profile/LeaveStars";
+import { handleClientScriptLoad } from "next/script";
 // import "@/styles/LeaveReview.css"
 
 export default function ProfilePage() {
@@ -32,6 +35,7 @@ export default function ProfilePage() {
   const [options, setOptions] = useState([]);
   const [dropdownValue1, setDropdownValue1] = useState("");
   const [dropdownValue2, setDropdownValue2] = useState("");
+  const [rating, setRating] = useState(0)
   const { mutate } = useSWRConfig();
 
   useEffect(() => {
@@ -41,7 +45,7 @@ export default function ProfilePage() {
   }, []);
 
   const fetchRestaurantList = () => {
-    fetch("http://localhost:8000" + "/get_restaurants_name", {
+    fetch("http://10.221.31.28:8000" + "/get_restaurants_name", {
       method: "GET",
       headers: {
         Authorization: `Bearer `,
@@ -78,22 +82,53 @@ export default function ProfilePage() {
       .catch((error) => console.error("Error:", error));
   };
 
-  const writeReviewToFile = (data) => {
-    const newReview = { description: data.description };
-    const updatedReviews = [...reviews, newReview];
 
-    fetch("/reviews.json", {
+
+
+
+  const writeReviewToFile = () => {
+    if (currentReview.trim() === "") {
+      window.alert("리뷰를 작성해주세요!");
+      return;
+    } else if (dropdownValue1 === "") {
+      window.alert("레스토랑을 선택해주세요!");
+      return;
+    }
+  
+    const newReview = {
+      restaurant_name: dropdownValue1,
+      rating: rating,
+      description: currentReview,
+    };
+  
+    fetch("http://10.221.31.28:8000/user/reviews", {
       method: "POST",
       headers: {
+        Authorization: `Bearer ${userName}`, // 유저 아이디에 따라 수정
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ reviews: updatedReviews }),
+      body: JSON.stringify({
+        review_info: {restaurant_name: dropdownValue1, rating: rating, description: currentReview}
+      }),
     })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
       .then(() => {
+        const updatedReviews = [...reviews, newReview];
         setReviews(updatedReviews);
+        setCurrentReview(""); // 작성 후 칸 비우기
       })
       .catch((error) => console.error("Error:", error));
   };
+  
+    const onStarChange= (newRating:number)=>{
+    setRating(newRating)
+  }
+
 
   const handleDropdownChange1 = (e) => {
     setDropdownValue1(e.target.value);
@@ -102,6 +137,7 @@ export default function ProfilePage() {
   const handleDropdownChange2 = (e) => {
     setDropdownValue2(e.target.value);
   };
+
 
   return (
     <>
@@ -116,72 +152,106 @@ export default function ProfilePage() {
       <ProfileBody>
         <ProfileBodyContent>
           <ReviewContainer>
-            <div style={{ display: "flex", width: "100%", height: "100vh" }}>
-              <div
-                style={{
-                  flex: 1,
-                  paddingLeft: "8px",
-                  paddingBottom: "8px",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "space-between",
-                }}
-              >
-                <div>
-                  <StyledDropdownButton
-                    value={dropdownValue1}
-                    onChange={handleDropdownChange1}
-                  >
-                    {options.map((option, index) => (
-                      <option key={index} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </StyledDropdownButton>
-                </div>
-
-                <LeaveStars></LeaveStars>
-                <ReviewWriteContainer>
-                  <div style={{ flex: "1 1 auto", overflow: "hidden" }}>
-                    <textarea
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        resize: "none",
-                        border: "1px solid #ccc",
-                        padding: "8px",
-                      }}
-                      value={currentReview}
-                      onChange={(e) => setCurrentReview(e.target.value)}
-                    />
-                  </div>
-                  <button
-                    style={{ alignSelf: "flex-end", marginTop: "8px" }}
-                    onClick={() => {
+          <div style={{ display: "flex", width: "100%", height: "100vh" }}>
+            <div
+              style={{
+                flex: 1,
+                paddingLeft: "8px",
+                paddingBottom: "8px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
+              <div style={{ paddingTop: '10px', paddingBottom: '10px', display: "flex", justifyContent: "space-between" }}>
+                <StyledDropdownButton
+                  value={dropdownValue1}
+                  onChange={handleDropdownChange1}
+                >
+                  {options.map((option, index) => (
+                    <option key={index} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </StyledDropdownButton>
+                <LeaveStars initialRating = {0} onChange = {onStarChange} ></LeaveStars>
+              </div>
+            <ReviewWriteContainer>
+              <div style={{ flex: "1 1 auto" }}>
+                <textarea
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    resize: "none",
+                    border: "1px solid #ccc",
+                    padding: "8px",
+                    backgroundColor: "#f2f2f2",
+                  }}
+                  value={currentReview}
+                  onChange={(e) => setCurrentReview(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && e.shiftKey === false) {
+                      e.preventDefault(); // 엔터키 기본 동작 방지
                       if (currentReview.trim() === "") {
                         window.alert("리뷰를 작성해주세요!");
+                      } else if (dropdownValue1 === "") {
+                        window.alert("레스토랑을 선택해주세요!");
                       } else {
-                        writeReviewToFile({ description: currentReview });
+                        writeReviewToFile({
+                          description: currentReview,
+                          rating: rating,
+                          restaurantName: dropdownValue1,
+                        });
                         setCurrentReview(""); // 작성 후 칸 비우기
                       }
-                    }}
-                  >
-                    리뷰 작성
-                  </button>
-                </ReviewWriteContainer>
+                    }
+                  }}
+                />
               </div>
-              <div style={{ flex: 1, overflow: "auto", paddingLeft: "16px" }}>
-                <h3>작성한 리뷰 목록</h3>
-                <div>
-                  {reviews.map((review, index) => (
-                    <div key={index}>{review.description}</div>
-                  ))}
-                </div>
-              </div>
+              <button
+                style={{ alignSelf: "flex-end", marginTop: "8px" }}
+                onClick={() => {
+                  if (currentReview.trim() === "") {
+                    window.alert("리뷰를 작성해주세요!");
+                  } else if (dropdownValue1 === "") {
+                    window.alert("레스토랑을 선택해주세요!");
+                  } else {
+                    writeReviewToFile({
+                      description: currentReview,
+                      rating: rating,
+                      restaurantName: dropdownValue1,
+                    });
+                    setCurrentReview(""); // 작성 후 칸 비우기
+                  }
+                }}
+              >
+                리뷰 작성
+              </button>
+            </ReviewWriteContainer>
             </div>
+            <div style={{ flex: 1, paddingLeft: "16px" }}>
+              <h3 style={{ paddingTop: '30px', paddingRight: '20px', textAlign: "center" }}>리뷰 목록</h3>
+              <ReviewBox>
+                {reviews.map((review, index) => (
+                  <FixedHeightReview key={index}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <strong>{review.restaurant_name}</strong>
+                      {/* <LeaveStars /> 별점 컴포넌트를 렌더링하는 부분 */}
+                    </div>
+                    <p className="gray-text">{review.description}</p>
+                  </FixedHeightReview>
+                ))}
+              </ReviewBox>
+
+
+
+            </div>
+          </div>
+
           </ReviewContainer>
         </ProfileBodyContent>
       </ProfileBody>
     </>
   );
 }
+
