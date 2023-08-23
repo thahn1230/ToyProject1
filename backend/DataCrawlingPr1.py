@@ -23,7 +23,7 @@ endpoint = "https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode"
 driver = webdriver.Chrome()
 
 # Replace 'url' with the URL of the webpage you want to scrape
-url = 'https://map.naver.com/v5/entry/place/20198577?c=14.7,0,0,0,dh'
+url = 'https://map.naver.com/v5/entry/place/11812026?c=17.28,0,0,0,dh'
 driver.get(url)
 driver.maximize_window()
 

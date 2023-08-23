@@ -24,8 +24,17 @@ class Token(BaseModel):
 
 # Endpoint to retrieve reviews for a specific user
 @UserRouter.get("/user/reviews")
-def get_user_reviews(user_id: str =  Header(None)): 
-    print(user_id)
+def get_user_reviews(Authorization: str =  Header(None)): 
+    user_id = Authorization.split(" ")[1]
+
+    query = f"""
+        SELECT *
+        FROM db.revies
+        WHERE id = "{user_id}";"
+    """
+
+    reviews_df = pd.read_sql(query, engine)
+    print(reviews_df)
     return 0
 
 

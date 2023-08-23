@@ -59,7 +59,6 @@ def fetch_data_from_db():
     # Convert dictionary to a JSON string
     restaurants_str = json.dumps(restaurants_dict, ensure_ascii=False)
 
-    print(restaurants_str)
     return restaurants_str
 
 
@@ -70,28 +69,28 @@ def generate_response(params: dict):
         messages=[
             {
                 "role": "system",
-                "content": "Your task is to generate a list of restaurants based on the provided data. Your response must be in a structured JSON-like format. Here are your instructions: \n"
+                "content": "Your task is to generate a list of restaurants based on the provided data and return it in a structured JSON format. Follow these steps:\n"
                 "1. Review the list of restaurants.\n"
-                "2. Calculate the actual time the user will go to the restaurant. They might specify the time in different ways such as 'after 5 hours', 'at 23:00:00', 'at 23', etc. Parse the user's input to determine this time in the format 'hour:minute:second'. "
-                "Once you've determined this time, identify the restaurants that will be open. The calculated time should be between the 'open' and 'close' times of the restaurant.\n"
-                "3. Use the data of the open restaurants directly without modifying the structure.\n"
+                "2. Determine the actual time the user plans to visit the restaurant based on their input. Inputs might be like '5시간 뒤에', '밤 11시', '23시', etc. Convert this to 'hour:minute:second' format. "
+                "Given the current time is " + datetime.now().strftime("%H:%M:%S") + ", calculate the user's intended visit time.\n"
+                "For example, if the current time is 15:30:00 and if user said that he will visit after 3 hours, intended visit time is 18:30:00.\n"
+                "For example, if the current time is 15:30:00 and if user said that he will visit after 30 minutes, intended visit time is 16:00:00.\n"
+                "3. Select the restaurants open at the intended visit time. Ensure the calculated time falls between the 'open' and 'close' times of the restaurant.\n"
+                "When determining if the calculated time falls between 'open' and 'close' time, consider the hours first and if they have same hour, consider minutes. If the minute is also the same, consider it as 'do not fall'.\n"
                 "4. Combine the selected restaurants into an array named 'restaurants'.\n"
-                "5. Your response should also include a 'message' in Korean describing your selection.\n"
-                "6. Your final response should be only: {message: 'your_message', restaurants: [selected_restaurants_list]}. Please ensure the data is in a structured, JSON-like format."
+                "5. Include a 'message' in Korean summarizing your selection.\n"
+                "6. Your final response format should be: {message: 'your_message', restaurants: [selected_restaurants_list]}. This is the most important.\n"
             },
             {
                 "role": "system",
                 "content": "Here's the list of available data: " + fetch_data_from_db()
             },
             {
-                "role": "system",
-                "content": "The current time(hour:minute:second) now is: " + datetime.now().strftime("%H:%M:%S")
-            },
-            {
                 "role": "user",
                 "content": params["message"]
             },
         ],
+
         temperature=0,
     )
 

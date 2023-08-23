@@ -5,7 +5,7 @@ db_config = {
     "port": 3306,
     "user": "admin",
     "password": "asdfasdf",
-    "database": "",
+    "database": "db",
 }
 
 # toyProj DB에 연결

@@ -8,12 +8,34 @@ import {
   ReviewContainer,
 } from "@/components/profile/profile.styles";
 import Head from "next/head";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSWRConfig } from "swr";
+
+import LeaveReview from "@/components/profile/LeaveReview";
+// import "@/styles/LeaveReview.css"
+
 
 export default function ProfilePage() {
   const [reviews, setReviews] = useState([]);
   const { mutate } = useSWRConfig();
+
+  useEffect(() => {
+    fetch("http://localhost:8000" + "/user/reviews", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ` + localStorage.getItem("token"),
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((response) => {})
+      .catch((error) => console.error("Error:", error));
+  }, []);
 
   const getReviews = () => {
     fetch("http://localhost:8000/query", {
@@ -75,10 +97,13 @@ export default function ProfilePage() {
       </HomeHeader>
       <ProfileBody>
         <ProfileBodyHeader>
-          <ProfileBodyHeader></ProfileBodyHeader>
+          <ProfileBodyHeader>header</ProfileBodyHeader>
         </ProfileBodyHeader>
+
         <ProfileBodyContent>
-          <ReviewContainer></ReviewContainer>
+          <ReviewContainer>
+           
+          </ReviewContainer>
         </ProfileBodyContent>
       </ProfileBody>
     </>
