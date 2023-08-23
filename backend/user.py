@@ -30,7 +30,7 @@ def get_user_reviews(Authorization: str =  Header(None)):
     query = f"""
         SELECT *
         FROM db.revies
-        WHERE id = "{user_id}";"
+        WHERE id = "{user_id}";
     """
 
     reviews_df = pd.read_sql(query, engine)

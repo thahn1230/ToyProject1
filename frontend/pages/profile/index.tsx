@@ -24,29 +24,46 @@ const StyledDropdownButton = styled.select`
 import LeaveReview from "@/components/profile/LeaveReview";
 // import "@/styles/LeaveReview.css"
 
-
 export default function ProfilePage() {
   const [reviews, setReviews] = useState([]);
   const [userName, setUserName] = useState("");
   const [currentReview, setCurrentReview] = useState("");
+
+  const [options, setOptions] = useState([]);
   const [dropdownValue1, setDropdownValue1] = useState("");
   const [dropdownValue2, setDropdownValue2] = useState("");
   const { mutate } = useSWRConfig();
 
-  const options = [
-    "옵션 1",
-    "옵션 2",
-    "옵션 3",
-    // ... 더 많은 옵션들
-  ];
-
   useEffect(() => {
     getReviews();
     fetchUserName();
+    fetchRestaurantList();
   }, []);
+
+  const fetchRestaurantList = () => {
+    fetch("http://localhost:8000" + "/login", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer `,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((response) => {
+console.log(response)
+
+      })
+      .catch((error) => console.error("Error:", error));
+  };
 
   const fetchUserName = () => {
     const storedUserName = localStorage.getItem("name");
+    if (storedUserName === null) return;
     setUserName(storedUserName);
   };
 
@@ -89,7 +106,7 @@ export default function ProfilePage() {
       <Head>
         <title>프로필</title>
       </Head>
-    
+
       <HomeHeader>
         <HeaderLeft />
         <HeaderRight />
@@ -97,27 +114,46 @@ export default function ProfilePage() {
       <ProfileBody>
         <ProfileBodyContent>
           <ReviewContainer>
-
-            <div style={{ display: 'flex', width: '100%', height: '100vh' }}>
-              <div style={{ flex: 1, paddingLeft: '8px', paddingBottom: '8px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div style={{ display: "flex", width: "100%", height: "100vh" }}>
+              <div
+                style={{
+                  flex: 1,
+                  paddingLeft: "8px",
+                  paddingBottom: "8px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
+              >
                 <div>
-                  <StyledDropdownButton value={dropdownValue1} onChange={handleDropdownChange1}>
+                  <StyledDropdownButton
+                    value={dropdownValue1}
+                    onChange={handleDropdownChange1}
+                  >
                     {options.map((option, index) => (
-                      <option key={index} value={option}>{option}</option>
+                      <option key={index} value={option}>
+                        {option}
+                      </option>
                     ))}
                   </StyledDropdownButton>
                 </div>
-                
+
                 <ReviewWriteContainer>
-                  <div style={{ flex: '1 1 auto', overflow: 'hidden' }}>
+                  <div style={{ flex: "1 1 auto", overflow: "hidden" }}>
                     <textarea
-                      style={{ width: '100%', height: '100%', resize: 'none', border: '1px solid #ccc', padding: '8px' }}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        resize: "none",
+                        border: "1px solid #ccc",
+                        padding: "8px",
+                      }}
                       value={currentReview}
                       onChange={(e) => setCurrentReview(e.target.value)}
                     />
                   </div>
                   <button
-                    style={{ alignSelf: 'flex-end', marginTop: '8px' }}
+                    style={{ alignSelf: "flex-end", marginTop: "8px" }}
                     onClick={() => {
                       if (currentReview.trim() === "") {
                         window.alert("리뷰를 작성해주세요!");
@@ -131,7 +167,7 @@ export default function ProfilePage() {
                   </button>
                 </ReviewWriteContainer>
               </div>
-              <div style={{ flex: 1, overflow: 'auto', paddingLeft: '16px' }}>
+              <div style={{ flex: 1, overflow: "auto", paddingLeft: "16px" }}>
                 <h3>작성한 리뷰 목록</h3>
                 <div>
                   {reviews.map((review, index) => (
