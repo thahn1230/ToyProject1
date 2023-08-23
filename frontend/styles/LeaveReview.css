@@ -1,0 +1,24 @@
+
+.rating-container {
+    display: flex;
+  }
+  
+  .star {
+    width: 20px;
+    height: 20px;
+    margin: 0 2px;
+    background: url('./../resources/empty_star.png') no-repeat center;
+    background-size: contain;
+    cursor: pointer;
+  }
+  
+  .star.filled {
+    background: url('./../resources/full_star.png') no-repeat center;
+    background-size: contain;
+  }
+  
+  .star.half-filled {
+    background: url('./../resources/half_full_star.png') no-repeat center;
+    background-size: contain;
+  }
+  

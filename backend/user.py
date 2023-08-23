@@ -25,11 +25,12 @@ class Token(BaseModel):
 
 
 # Endpoint to retrieve reviews for a specific user
-@UserRouter.get("/user/reviews")
-def get_user_reviews(params: dict, user_id: str = Header(None)):
-    restaurant_name = params["restaurant_name"]
-    rating = params["rating"]
-    description = params["description"]
+@UserRouter.post("/user/reviews")
+def get_user_reviews(params: dict, Authorization: str = Header(None)):
+    user_id = Authorization.split(" ")[1]
+    restaurant_name = params["review_info"]["restaurant_name"]
+    rating = params["review_info"]["rating"]
+    description = params["review_info"]["description"]
 
     try:
         with Session(engine) as session:
@@ -142,39 +143,24 @@ def get_restaurants_name():
     # async def change_password(params: dict, token: TokenData = Depends(verify_user)):
     user_id = token["id"]
     query = f"""
-        SELECT password FROM user_information
-        WHERE id = "{user_id}"
+        SELECT *
+        FROM db.revies
+        WHERE id = "{user_id}";
     """
-    current_pw_db = pd.read_sql(query, engine)["password"].iloc[0]
-    current_pw_client = params["pw_info"]["current_pw"]
-    changed_pw = params["pw_info"]["changed_pw"]
 
-    # 파알못 팀장님 string 값비교는 == != 입니다
-    # is, is not은 객체 비교라서 엄연히 달라요
-    # -의문의 기홍씨-
-    if current_pw_db != current_pw_client:
-        print("Password not correct")
-        return False
-    else:
-        try:
-            with Session(engine) as session:
-                session.execute(
-                    text(
-                        """
-                        UPDATE `user_information` SET `password` = :password
-                        WHERE (`id` = :user_id)
-                    """
-                    ),
-                    {
-                        "user_id": user_id,
-                        "password": changed_pw,
-                    },
-                )
+    reviews_df = pd.read_sql(query, engine)
+    print(reviews_df)
+    return 0
 
-                session.commit()
-        except Exception as e:
-            print("An error occurred: ", e)
-            session.rollback()
-            return False
 
-    return True
+@UserRouter.get("/get_restaurants_name")
+def get_restaurants_name():
+    query = """
+        SELECT name FROM db.restaurants;
+    """
+
+    restaurants_name_df = pd.read_sql(query, engine)
+
+    return JSONResponse(
+        restaurants_name_df.to_json(force_ascii=False, orient="records")
+    )

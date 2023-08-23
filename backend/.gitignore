@@ -1,3 +1,7 @@
 __pycache__/
 queryConfig.py
 userLoginConfig.py
+<<<<<<< HEAD
+dbAccess.py
+=======
+>>>>>>> 5471e205e3a0a775a925898d43ffe51ff0d05ab1

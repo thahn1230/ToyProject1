@@ -59,7 +59,6 @@ def fetch_data_from_db():
     # Convert dictionary to a JSON string
     restaurants_str = json.dumps(restaurants_dict, ensure_ascii=False)
 
-    print(restaurants_str)
     return restaurants_str
 
 

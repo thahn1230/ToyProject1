@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app'
 import Script from 'next/script';
 import Head from 'next/head';
 import MAP_API_KEY from "mapAPI_KEY.json"
+import "@/styles/LeaveReview.css"
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
