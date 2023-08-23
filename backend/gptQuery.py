@@ -64,17 +64,20 @@ def fetch_data_from_db():
 
 @GPT_Router.post("/query")
 def generate_response(params: dict):
+    restaurants_list =  fetch_data_from_db()
+    time_now = datetime.now().strftime("%H:%M:%S")
+
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo-16k",
         messages=[
             {
                 "role": "system",
-                "content": "Here's the list of available data: " + fetch_data_from_db(),
+                "content": "Here's the list of restaurants: " +restaurants_list,
             },
             {
                 "role": "system",
                 "content": "The current time(hh:mm:ss) now is: "
-                + datetime.now().strftime("%H:%M:%S"),
+                + time_now,
             },
             {
                 "role": "system",
@@ -87,14 +90,14 @@ def generate_response(params: dict):
                 "content": "Your task is to generate a list of restaurants based on the provided data. Your response must be in a structured JSON-like format. Here are your instructions: \n"
                 "1. Review the list of restaurants.\n"
                 "2. Calculate the actual time the user will go to the restaurant. They might specify the time in different ways such as 'after 5 hours', 'at 23:00:00', 'at 23', etc. Parse the user's input to determine this time in the format 'hh:mm:ss'.\n"
-                "Once you've determined this time, consider it with restaurants' 'open' and 'close' time. The calculated time should be between the 'open' and 'close' times of the restaurant.\n"
+                "Once you've determined this time, consider it with restaurants' 'open' and 'close' time.\n"
+                "Format of time is hour:minute:second. Hour should be bigger or equal than that of open's, and hour should be smaller or equal than that of close's. If hours are same, then compare minute in the same way.\n"
+                "If it does not match the condition, never insert it into the restaurants array in your response.\n"
                 "3. Use the data of the open restaurants directly without modifying the structure.\n"
                 "4. Combine the selected restaurants into an array named 'restaurants'.\n"
-                "5. Your response should also include a 'message' in Korean describing your selection.\n"
-                "6. Your final response should be only: {message: 'your_message', restaurants: [selected_restaurants_list]}. Please ensure the data is in a structured, JSON-like format.\n"
+                "5. Your final response should be only: {message: 'your_message', restaurants: [selected_restaurants_list]}. Please ensure the data is in a structured, JSON-like format.\n"
+                "6. Your response, in 'message', it should also include a 'message' in Korean describing your selection and the calculated time.\n"
                 "7. Once again, you must consider and calculate the time that user said. If the calculated time that user said is later than the 'close' time of the restaurant, then that restaurant is not valid and must not be shown or suggested.\n"
-                "for example, if user said he will go to the restaurants after 5 hours at 18:00:00, that means that he will arrive at the restaurants at 23:00:00. So the calculated timeis 23:00:00.\n"
-                "The name '양미옥' restaurants' 'close' time is 20:40:00. It's after the calculated time which is 23:00:00. Then the '양미옥' restaurant is invalid, so it must not be suggested and shown to user.",
             },
             {"role": "user", "content": params["message"]},
         ],
