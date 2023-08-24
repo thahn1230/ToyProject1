@@ -25,7 +25,19 @@ class Token(BaseModel):
 
 
 # Endpoint to retrieve reviews for a specific user
-@UserRouter.post("/user/reviews")
+@UserRouter.get("/user/reviews")
+def get_user_reviews( Authorization: str = Header(None)):
+    user_id = Authorization.split(" ")[1]
+
+    query = f"""
+        SELECT restaurant_name, rating, description FROM db.reviews
+        where user_id= "{user_id}";
+    """
+    review_df = pd.read_sql(query, engine)
+
+    return JSONResponse(review_df.to_json(force_ascii=False, orient="records"))
+
+@UserRouter.post("/user/new_review")
 def get_user_reviews(params: dict, Authorization: str = Header(None)):
     user_id = Authorization.split(" ")[1]
     restaurant_name = params["review_info"]["restaurant_name"]
@@ -36,6 +48,19 @@ def get_user_reviews(params: dict, Authorization: str = Header(None)):
         with Session(engine) as session:
             session.execute(
                 text(
+                     """
+                    DELETE FROM reviews
+                    WHERE user_id = :user_id AND restaurant_name = :restaurant_name;
+                    """
+                ),
+                {
+                    "user_id": user_id,
+                    "restaurant_name": restaurant_name
+                },
+            )
+
+            session.execute(
+                text(
                     """
                     INSERT INTO reviews (user_id, restaurant_name, rating, description)
                     VALUES (:user_id, :restaurant_name, :rating, :description);
@@ -44,7 +69,7 @@ def get_user_reviews(params: dict, Authorization: str = Header(None)):
                 {
                     "user_id": user_id,
                     "restaurant_name": restaurant_name,
-                    "rating": rating,
+                    "rating": 2*rating + 1,
                     "description": description,
                 },
             )

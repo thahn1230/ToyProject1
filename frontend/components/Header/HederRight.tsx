@@ -47,8 +47,6 @@ const HeaderRight = () => {
         </LoginButton>
       ) : (
         <>
-          <FiLogOut onClick={handleLogout}></FiLogOut>
-          <div>{localStorage.getItem("name")}</div>
           <Link href="/profile">
             <Image
               src="/ProfileImage.png"
@@ -57,6 +55,8 @@ const HeaderRight = () => {
               alt="profile"
             ></Image>
           </Link>
+          <div>{localStorage.getItem("name")}</div>
+          <FiLogOut onClick={handleLogout}></FiLogOut>
         </>
       )}
     </HeaderRightWrapper>
