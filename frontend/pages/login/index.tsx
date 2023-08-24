@@ -87,7 +87,7 @@ export default function Login() {
     if (pwCheck === "") return alert("비밀번호를 다시 입력하세요");
     if (name === "") return alert("이름을 입력하세요");
     if (!isPwCheck) return alert("비밀번호가 일치하지 않습니다");
-    await fetch("http://192.168.0.49:8000" + "/sign_up", {
+    await fetch("http://localhost:8000" + "/sign_up", {
       method: "POST",
       headers: {
         Authorization: `Bearer `,

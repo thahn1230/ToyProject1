@@ -26,7 +26,7 @@ class Token(BaseModel):
 
 # Endpoint to retrieve reviews for a specific user
 @UserRouter.get("/user/reviews")
-def get_user_reviews( Authorization: str = Header(None)):
+def get_user_reviews(Authorization: str = Header(None)):
     user_id = Authorization.split(" ")[1]
 
     query = f"""
@@ -36,6 +36,7 @@ def get_user_reviews( Authorization: str = Header(None)):
     review_df = pd.read_sql(query, engine)
 
     return JSONResponse(review_df.to_json(force_ascii=False, orient="records"))
+
 
 @UserRouter.post("/user/new_review")
 def get_user_reviews(params: dict, Authorization: str = Header(None)):
@@ -48,15 +49,12 @@ def get_user_reviews(params: dict, Authorization: str = Header(None)):
         with Session(engine) as session:
             session.execute(
                 text(
-                     """
+                    """
                     DELETE FROM reviews
                     WHERE user_id = :user_id AND restaurant_name = :restaurant_name;
                     """
                 ),
-                {
-                    "user_id": user_id,
-                    "restaurant_name": restaurant_name
-                },
+                {"user_id": user_id, "restaurant_name": restaurant_name},
             )
 
             session.execute(
@@ -69,7 +67,7 @@ def get_user_reviews(params: dict, Authorization: str = Header(None)):
                 {
                     "user_id": user_id,
                     "restaurant_name": restaurant_name,
-                    "rating": 2*rating + 1,
+                    "rating": 2 * rating + 1,
                     "description": description,
                 },
             )

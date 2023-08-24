@@ -63,7 +63,7 @@ def fetch_data_from_db():
 
 
 @GPT_Router.post("/query")
-def generate_response(params: dict):
+async def generate_response(params: dict):
     fetch_data = fetch_data_from_db()
     time = datetime.now().strftime("%H:%M:%S")
     response = openai.ChatCompletion.create(
