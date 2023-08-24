@@ -22,7 +22,11 @@ const ChatBox = ({
   }, [messages]);
 
   const PostMessage = (message: string) => {
+<<<<<<< HEAD
     fetch("http://10.221.31.28:8000/query", {
+=======
+    fetch("http://localhost:8000/query", {
+>>>>>>> bbb9ee4efb886110041994ce62641f9689728e56
       method: "POST",
       headers: {
         Authorization: `Bearer`,
