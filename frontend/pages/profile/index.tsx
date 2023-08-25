@@ -49,8 +49,6 @@ export default function ProfilePage() {
   const [rating, setRating] = useState(0)
   const { mutate } = useSWRConfig();
 
-  const [rating, setRating] = useState(0);
-
   useEffect(() => {
     console.log(writtenReview);
   }, [writtenReview]);
@@ -302,7 +300,6 @@ export default function ProfilePage() {
                 <div>{reviewList}</div>
               </div>
             </div>
-          </div>
 
           </ReviewContainer>
         </ProfileBodyContent>
