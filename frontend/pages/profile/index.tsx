@@ -7,6 +7,8 @@ import {
   ProfileBodyHeader,
   ReviewContainer,
   ReviewWriteContainer,
+  ReviewBox,
+  FixedHeightReview,
 } from "@/components/profile/profile.styles";
 import Head from "next/head";
 import { useState, useEffect } from "react";
@@ -22,6 +24,7 @@ const StyledDropdownButton = styled.select`
 `;
 
 import LeaveStars from "@/components/profile/LeaveStars";
+import { handleClientScriptLoad } from "next/script";
 // import "@/styles/LeaveReview.css"
 
 interface reviewI {
@@ -43,6 +46,7 @@ export default function ProfilePage() {
   const [options, setOptions] = useState([]);
   const [dropdownValue1, setDropdownValue1] = useState("");
   const [dropdownValue2, setDropdownValue2] = useState("");
+  const [rating, setRating] = useState(0)
   const { mutate } = useSWRConfig();
 
   const [rating, setRating] = useState(0);
@@ -211,6 +215,7 @@ export default function ProfilePage() {
     setDropdownValue2(e.target.value);
   };
 
+
   return (
     <>
       <Head>
@@ -297,9 +302,12 @@ export default function ProfilePage() {
                 <div>{reviewList}</div>
               </div>
             </div>
+          </div>
+
           </ReviewContainer>
         </ProfileBodyContent>
       </ProfileBody>
     </>
   );
 }
+
