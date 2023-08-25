@@ -46,7 +46,7 @@ export default function ProfilePage() {
   const [options, setOptions] = useState([]);
   const [dropdownValue1, setDropdownValue1] = useState("");
   const [dropdownValue2, setDropdownValue2] = useState("");
-  const [rating, setRating] = useState(0)
+  const [rating, setRating] = useState(0);
   const { mutate } = useSWRConfig();
 
   useEffect(() => {
@@ -115,28 +115,27 @@ export default function ProfilePage() {
     return <div key={index} className={starClass}></div>;
   };
 
-
-
-  useEffect(()=>{
+  useEffect(() => {
     setReviewList(
       reviews.map((review: reviewI, index: number) => (
-        <div key={index} style={{}}>
-          <div style={{ display: "flex" }}>
-            <div style={{ marginRight: "10px" }}>
-              {review.restaurant_name}{" "}
-            </div>
+        <FixedHeightReview key={index}>
+          <div key={index} style={{}} className="ReviewContainer">
             <div style={{ display: "flex" }}>
-              {[1, 2, 3, 4, 5].map((index) =>
-                renderStar(index, review.rating)
-              )}{" "}
+              <div style={{ marginRight: "10px" }}>
+                {review.restaurant_name}{" "}
+              </div>
+              <div style={{ display: "flex" }}>
+                {[1, 2, 3, 4, 5].map((index) =>
+                  renderStar(index, review.rating)
+                )}{" "}
+              </div>
             </div>
+            <div>{review.description} </div>
           </div>
-          <div>{review.description} </div>
-          <div>---</div>
-        </div>
+        </FixedHeightReview>
       ))
     );
-  },[reviews])
+  }, [reviews]);
 
   const getReviews = () => {
     fetch("http://localhost:8000/user/reviews", {
@@ -213,7 +212,6 @@ export default function ProfilePage() {
     setDropdownValue2(e.target.value);
   };
 
-
   return (
     <>
       <Head>
@@ -282,10 +280,9 @@ export default function ProfilePage() {
                     onClick={() => {
                       if (currentReview.trim() === "") {
                         window.alert("리뷰를 작성해주세요!");
-                      } else if(rating ===0){
+                      } else if (rating === 0) {
                         window.alert("별점을 매겨주세요!");
-                      }
-                      else {
+                      } else {
                         writeReviewToFile();
                         setCurrentReview(""); // 작성 후 칸 비우기
                       }
@@ -300,11 +297,9 @@ export default function ProfilePage() {
                 <div>{reviewList}</div>
               </div>
             </div>
-
           </ReviewContainer>
         </ProfileBodyContent>
       </ProfileBody>
     </>
   );
 }
-
